@@ -1,0 +1,38 @@
+
+.headingContainer{
+    height: 30px;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .search-icon{
+    position: absolute;
+    right:20px;
+  }
+
+  .serach-bar{
+    position: absolute;
+    right: 5px;
+  }
+
+  .headingContainer{
+    height: 30px;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .search-icon{
+    position: absolute;
+    right:20px;
+  }
+
+  .serach-bar{
+    position: absolute;
+    right: 5px;
+  }
+
+ .back{
+  background-color: rgba(0, 0, 0, 0.786);
+ }
