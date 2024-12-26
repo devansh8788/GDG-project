@@ -49,8 +49,10 @@ function Dashboard() {
 
                 // Calculate total invoices and total amount
                 const totalInvoicesCount = sortedInvoices.length;
-                const totalAmountSum = sortedInvoices.reduce((sum, invoice) => sum + parseFloat(invoice.amount || 0), 0);
-
+                const totalAmountSum = sortedInvoices.reduce((sum, invoice) => sum + parseFloat(invoice.total || 0), 0);
+                console.log('====================================');
+                console.log(sortedInvoices);
+                console.log('====================================');
                 setTotalInvoices(totalInvoicesCount);
                 setTotalAmount(totalAmountSum);
             } catch (error) {
@@ -88,7 +90,7 @@ function Dashboard() {
                         style={{ backgroundImage: `url(${man2})` }}
                     >
                         <h3 className="text-sm font-semibold">Total Revenue</h3>
-                        <p className="text-xl font-bold">${totalAmount.toFixed(2)}</p>
+                        <p className="text-xl font-bold">₹{totalAmount.toFixed(2)}</p>
                     </div>
                     <div
                         className="bg-white p-4 rounded-lg shadow-xl bg-cover bg-center text-white"
@@ -168,19 +170,19 @@ function Dashboard() {
                 </div>
                 <div className="mb-8 p-4 py-6 bg-white rounded-lg shadow-lg">
                     <h2 className="text-md font-semibold mb-4">Current Balance</h2>
-                    <p className="text-2xl font-bold mb-4">$5,320.00</p>
+                    <p className="text-2xl font-bold mb-4">₹5,320.00</p>
                     <div className="flex items-center space-x-4">
                         <div className="flex items-center">
                             <div className="w-6 h-6 bg-green-100 rounded-full flex justify-center items-center">
                                 <span className="text-green-500 font-bold">+</span>
                             </div>
-                            <p className="ml-1 text-green-500 font-bold">$1,200.00</p>
+                            <p className="ml-1 text-green-500 font-bold">₹1,200.00</p>
                         </div>
                         <div className="flex items-center">
                             <div className="w-6 h-6 bg-red-100 rounded-full flex justify-center items-center">
                                 <span className="text-red-500 font-bold">−</span>
                             </div>
-                            <p className="ml-1 text-red-500 font-bold">$300.00</p>
+                            <p className="ml-1 text-red-500 font-bold">₹300.00</p>
                         </div>
                     </div>
                 </div>

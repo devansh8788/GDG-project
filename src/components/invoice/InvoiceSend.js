@@ -352,14 +352,14 @@ const InvoiceSend = () => {
             (error) => {
               console.error("Error:", error);
               alert("Something went wrong. Please try again.");
+              setLoading(false);
             }
           );
       } catch (error) {
         console.error("Error in handleSubmit:", error);
         alert("Something went wrong. Please try again.");
+        setLoading(false);
       }
-      navigate("/dashboard/invoice")
-      setLoading(false);
     };
 
 

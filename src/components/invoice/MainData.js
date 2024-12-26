@@ -3,7 +3,7 @@ import { db } from '../../firebase';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import '../item/item.css'; // Adjust the path as per your structure
-
+import { FaRegEdit } from "react-icons/fa";
 const InvoicePage = () => {
     const navigate = useNavigate();
     const [invoices, setInvoices] = useState([]);
@@ -59,6 +59,7 @@ const InvoicePage = () => {
                 <div className="flex-1 text-left">Due Date</div>
                 <div className="flex-1 text-left">Amount</div>
                 <div className="flex-1 text-left">Balance Due</div>
+                <div className="flex-2 text-left">Edit</div>
             </div>
 
             {/* Invoice Rows */}
@@ -111,6 +112,9 @@ const InvoicePage = () => {
                         {/* Balance due  */}
                         <div className="flex-1 text-left">
                             ₹{typeof invoice.total === 'number' ? invoice.total.toFixed(2) : '0.00'}
+                        </div>
+                        <div className="flex-2 text-left">
+                        <FaRegEdit />
                         </div>
                     </div>
                 ))
