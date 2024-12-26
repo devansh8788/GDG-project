@@ -5,6 +5,7 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import Dashboard from './components/Dashboard';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import OrganizationForm from './components/OrganizationForm';
 
 // Global Styles using Inter font
 const GlobalStyles = createGlobalStyle`
@@ -46,6 +47,7 @@ function AppRoutes() {
     { path: "/login", element: <Login /> },
     { path: "/signup", element: <Signup /> },
     { path: "/dashboard/*", element: <Dashboard /> },
+    { path: "/orgform", element: <OrganizationForm /> },
   ]);
 }
 

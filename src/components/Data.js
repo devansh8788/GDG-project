@@ -11,6 +11,7 @@ import footware from '../assets/footware.png';
 import gloves from '../assets/gloves.png';
 import InvoiceTable from "./InvoiceTable";
 import { Link } from 'react-router-dom';
+import MonthlyChart from "./MonthlyChart"
 
 function Dashboard() {
     const [invoices, setInvoices] = useState([]);
@@ -113,14 +114,7 @@ function Dashboard() {
     <img src={start} alt="Start Icon" className="w-24 h-24 object-cover cursor-pointer" />
 </Link>
                     </div>
-                    <div className="bg-white p-4 rounded-lg shadow-xl mt-4 flex justify-between items-center">
-                        <div>
-                            <h3 className="text-lg font-bold">Monthly Revenue</h3>
-                            <p className="text-xl font-bold">$2,530</p>
-                            <p className="text-gray-600 text-sm">October 2024</p>
-                        </div>
-                        <img src={graph} alt="Finance Graph" className="w-1/3 h-auto object-cover" />
-                    </div>
+                    <MonthlyChart/>
                 </div>
 
                 {/* Recent Invoices */}
