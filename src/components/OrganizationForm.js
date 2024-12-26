@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { db, storage } from '../firebase'; // Firestore and Storage instances
 import { collection, addDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -7,6 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import backGround from '../assets/back.jpg';
 
 const OrganizationForm = ({ user, onOrganizationAdded }) => {
+  const navigate = useNavigate(); // Initialize useNavigate
+
   // Form State
   const [logoFile, setLogoFile] = useState(null);
   const [organizationName, setOrganizationName] = useState('');
@@ -186,7 +189,11 @@ const OrganizationForm = ({ user, onOrganizationAdded }) => {
               <button type="submit" className="bg-blue-600 text-white py-3 px-5 rounded-md">
                 Get Started
               </button>
-              <button type="button" className="bg-gray-300 text-gray-600 py-3 px-5 rounded-md" onClick={() => { /* Go back logic */ }}>
+              <button
+                type="button"
+                className="bg-gray-300 text-gray-600 py-3 px-5 rounded-md"
+                onClick={() => navigate('/dashboard')} // Navigate to /dashboard
+              >
                 Go Back
               </button>
             </div>
