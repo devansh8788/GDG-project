@@ -13,6 +13,7 @@ import MainData from "./invoice/MainData"
 import BillPage from '../components/invoice/Bill'
 import ItemForm from './item/ItemForm';
 import InvoiceSend from './invoice/InvoiceSend';
+import Logobill from './invoice/LogoBill';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -53,6 +54,7 @@ const Dashboard = () => {
             <Route path="customer" element={<Customer/>} />
             <Route path="customerform" element={<Customerform/>}/>
             <Route path="/bill/:id" element={<BillPage />} />
+            <Route path="/logobill/:id" element={<Logobill />} />
             <Route path="/item" element={<ItemForm />} />
             <Route path="/email" element={<InvoiceSend />} />
                   </Routes>

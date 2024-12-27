@@ -5,7 +5,7 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import Dashboard from './components/Dashboard';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-
+import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
 // Global Styles using Inter font
 const GlobalStyles = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
@@ -52,6 +52,7 @@ function AppRoutes() {
 function App() {
   return (
     <Router>
+      <ToastContainer /> 
       <GlobalStyles />
       <AppRoutes />
     </Router>

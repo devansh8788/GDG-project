@@ -4,6 +4,7 @@ import { collection, getDocs, query } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import '../item/item.css'; // Adjust the path as per your structure
 import { FaRegEdit } from "react-icons/fa";
+import Navbar from '../Navbar';
 const InvoicePage = () => {
     const navigate = useNavigate();
     const [invoices, setInvoices] = useState([]);
@@ -39,6 +40,7 @@ const InvoicePage = () => {
 
     return (
         <div className="Main-Container ml-52 max-w-7xl mx-auto px-4">
+            <Navbar/>
             {/* Header */}
             <div className="flex justify-between items-center py-4">
                 <h1 className="text-lg font-bold text-left">Invoices</h1>
@@ -68,7 +70,7 @@ const InvoicePage = () => {
                     <div
                         key={invoice.id}
                         className="flex items-center text-sm px-4 py-3 border-b hover:bg-gray-100 cursor-pointer"
-                        onClick={() => navigate(`/dashboard/bill/${invoice.id}`)}
+                        onClick={() => navigate(`/dashboard/logobill/${invoice.id}`)}
                     >
                         {/* Date */}
                         <div className="flex-1 text-left">

@@ -45,7 +45,6 @@ const Invoice = () => {
 
       navigate('/dashboard/email', { state: { invoiceNumber: invoiceFormData.invoiceNumber } });
 
-      alert("Invoice saved successfully!");
     } catch (error) {
       console.error("Error saving invoice: ", error);
     }

@@ -4,8 +4,10 @@ import { RxCross2 } from "react-icons/rx";
 import { db } from '../../firebase'; // Firebase setup
 import { collection, addDoc } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import { useNavigate } from 'react-router-dom';
 
 const ItemForm = ({ setFormView, addItem }) => {
+  const navigate=useNavigate();
   const [selectedValue, setSelectedValue] = useState("option1");
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
@@ -46,13 +48,12 @@ const ItemForm = ({ setFormView, addItem }) => {
 
         // Call the function to add the item to the state in Item.js
         addItem(itemData);
-
-        alert("Item saved successfully!");
         setFormView(false);
     } catch (error) {
         console.error("Error adding item: ", error);
-        alert(`Failed to save: ${error.message}`);
     }
+    navigate("/dashboard/product")
+
 };
 
   return (

@@ -346,7 +346,7 @@ const InvoiceSend = () => {
                       theme: "colored",
                     });
                     setLoading(false);
-                    navigate('/dashboard/invoiceform')
+                    navigate('/dashboard/invoice')
               // alert("Invoice sent successfully!");
             },
             (error) => {

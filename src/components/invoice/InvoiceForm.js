@@ -165,7 +165,7 @@ function InvoiceForm({ onDataChange }) {
             onChange={(e) => setTerms(e.target.value)}
             className="w-full p-2 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option>Due On Receipt</option>
+            <option>Paid</option>
             <option>Net 15</option>
             <option>Net 30</option>
             <option>Net 45</option>
