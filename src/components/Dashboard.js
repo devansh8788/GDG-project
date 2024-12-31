@@ -14,6 +14,7 @@ import BillPage from '../components/invoice/Bill'
 import ItemForm from './item/ItemForm';
 import InvoiceSend from './invoice/InvoiceSend';
 import Logobill from './invoice/LogoBill';
+import Template3 from './invoice/Template3';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -55,6 +56,7 @@ const Dashboard = () => {
             <Route path="customerform" element={<Customerform/>}/>
             <Route path="/bill/:id" element={<BillPage />} />
             <Route path="/logobill/:id" element={<Logobill />} />
+            <Route path="/template3/:id" element={<Template3 />} />
             <Route path="/item" element={<ItemForm />} />
             <Route path="/email" element={<InvoiceSend />} />
                   </Routes>

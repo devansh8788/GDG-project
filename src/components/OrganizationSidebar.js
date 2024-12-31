@@ -2,6 +2,8 @@ import React, { useEffect, useCallback } from 'react';
 import { FaCog, FaCheck } from 'react-icons/fa';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { useNavigate } from 'react-router-dom';
+
 const OrganizationSidebar = ({
   isOpen,
   setIsOpen,
@@ -41,7 +43,7 @@ const OrganizationSidebar = ({
   //     setSelectedOrg(organizations[0]);
   //   }
   // }, [organizations]);
-  
+  const navigate = useNavigate();
   return (
     <div
       className={`fixed top-0 right-0 w-full sm:w-1/4 h-full bg-white shadow-lg z-20 transition-transform duration-300 ${
@@ -87,12 +89,12 @@ const OrganizationSidebar = ({
         {/* Manage Organization Button */}
         {selectedOrg && (
           <button
-            className="mt-6 flex items-center space-x-2 text-gray-700 hover:text-gray-900 transition"
-            onClick={() => console.log('Manage Organization')}
-          >
-            <FaCog className="text-lg" />
-            <span className="text-sm font-medium">Manage Organization</span>
-          </button>
+          className="mt-6 flex items-center space-x-2 text-gray-700 hover:text-gray-900 transition"
+          onClick={() => navigate('/orgform')} // Navigates to the /orgform route
+        >
+          <FaCog className="text-lg" />
+          <span className="text-sm font-medium">Add Organization</span>
+        </button>
         )}
       </div>
 

@@ -1,11 +1,12 @@
 .page{
-    height:min-content;
+  height:983px;
     width: 794px;
     margin: 20px 80px 20px auto ;
     padding: 0px 30px;
     font-family: Helvetica, sans-serif;
     position: relative;
     box-shadow: 0 0 4px rgb(88, 85, 85);
+
   }
   .titlediv{
     display: flex;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Document, Page, Text, View, StyleSheet, PDFDownloadLink } from '@react-pdf/renderer';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { doc, getDoc, collection, getDocs, query } from 'firebase/firestore';
 import { db } from '../../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,12 +8,15 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import './bill.css'
 import Navbar from '../Navbar';
+import TemplateSidebar from './TemplateSidebar';
 const Bill = () => {
   const { id } = useParams();
   const [billData, setBillData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [invoices, setInvoices] = useState([]);
   const [customerInvoices, setCustomerInvoices] = useState([]);
+    const [rightSidebarshow,setRightSidebarshow]=useState(false);
+    const navigate=useNavigate();
   useEffect(() => {
     const fetchBillData = async () => {
       try {
@@ -295,7 +298,7 @@ console.log('====================================');
           {
             customerInvoices.map(customer=>{
               return(
-                <div className='border p-2 m-2 my-4'>
+                <div className='border p-2 m-2 my-4' onClick={()=>{navigate(`/dashboard/bill/${customer.id}`)}} >
                 <div className='flex justify-between'>
                   <p className='text-blue-500'>Mr. {customer.customer.displayName}</p>
                   <p>₹ {customer.total.toFixed(2)}</p>
@@ -312,6 +315,7 @@ console.log('====================================');
 
 
         </div>
+        <div style={{margin:'auto'}}>
         <div className='page'>
           <div className='titlediv'>
             <div>
@@ -365,7 +369,7 @@ console.log('====================================');
 
 
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: 200 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between'}}>
             <p style={{ fontSize: 14 }}>Thanks for your buisness</p>
             <div className='subtotalHeadRow' >
               <div className='subtotalRow' >
@@ -407,14 +411,14 @@ console.log('====================================');
             </PDFDownloadLink>
           </button>
         </div>
+        <div className='mb-4'>
+          <button className='text-blue-600' onClick={()=>{setRightSidebarshow(true)}}>Change Layout</button>
+        </div>
+        </div>
       </div>
-      {/* <div>
-        <button className='button-83'>
-        <PDFDownloadLink document={<Invoice />} fileName="invoice.pdf">
-          {({ loading }) => (loading ? 'Loading document...' : 'Download now!')}
-        </PDFDownloadLink>
-        </button>
-      </div> */}
+      {
+        rightSidebarshow &&  <TemplateSidebar setRightSidebarshow={setRightSidebarshow} id={id} />
+      }
     </div>
   );
 };

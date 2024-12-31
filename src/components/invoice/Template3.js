@@ -6,18 +6,17 @@ import { db } from '../../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import './Logobill.css'
+import './Template3.css'
 import Navbar from '../Navbar';
 import logo from '../../assets/logo123.png'
 import TemplateSidebar from './TemplateSidebar';
-const Logobill = () => {
+const Template3 = () => {
   const { id } = useParams();
   const [billData, setBillData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [invoices, setInvoices] = useState([]);
   const [customerInvoices, setCustomerInvoices] = useState([]);
-  const [rightSidebarshow,setRightSidebarshow]=useState(false);
-  const [selectedOrg,setSelectedOrg]=useState(null);
+  const [rightSidebarshow, setRightSidebarshow] = useState(false);
   useEffect(() => {
     const fetchBillData = async () => {
       try {
@@ -65,23 +64,33 @@ const Logobill = () => {
     fetchBillData();
   }, [id]);
 
-  useEffect(() => {
-    const loadSelectedOrg = async () => {
-      try {
-        const savedOrg = await AsyncStorage.getItem('selectedOrganization');
-        if (savedOrg) {
-          console.log('====================================');
-          console.log(savedOrg);
-          console.log('====================================');
-          setSelectedOrg(JSON.parse(savedOrg));
-        }
-      } catch (error) {
-        console.error('Failed to load organization from AsyncStorage:', error);
-      }
-    };
+  // useEffect(() => {
+  //     const fetchInvoices = async () => {
+  //         try {
+  //             const orgData = localStorage.getItem('selectedOrganization');
+  //             const parsedOrgData = orgData ? JSON.parse(orgData) : null;
 
-    loadSelectedOrg();
-  }, [setSelectedOrg]);
+  //             if (!parsedOrgData || !parsedOrgData.id) {
+  //                 alert("No valid organization selected!");
+  //                 return;
+  //             }
+
+  //             const q = query(
+  //                 collection(db, `organizations/${parsedOrgData.id}/invoices`)
+  //             );
+  //             const querySnapshot = await getDocs(q);
+  //             const fetchedInvoices = querySnapshot.docs.map(doc => ({
+  //                 id: doc.id,
+  //                 ...doc.data(),
+  //             }));
+  //             setInvoices(fetchedInvoices);
+  //         } catch (error) {
+  //             console.error("Error fetching invoices: ", error);
+  //         }
+  //     };
+
+  //     fetchInvoices();
+  // }, []);
 
   if (loading) return <div className="text-center mt-8">Loading...</div>;
   if (!billData) return <div className="text-center mt-8">No data available.</div>;
@@ -93,15 +102,11 @@ const Logobill = () => {
   console.log('====================================');
   const styles = StyleSheet.create({
     page: {
-      padding: 30,
+      padding: 20,
       fontFamily: 'Helvetica',
     },
     titleView: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingBottom: 10,
-      borderBottomWidth: 1
+      paddingHorizontal: 30
     },
     logo: {
       width: 150
@@ -110,7 +115,8 @@ const Logobill = () => {
       fontSize: 40,
       marginBottom: 20,
       fontWeight: 'bold',
-      color: '#3871c1'
+      color: 'red',
+      fontFamily: 'times-new-roman'
     },
     invoiceDetails: {
       fontSize: 10,
@@ -203,9 +209,12 @@ const Logobill = () => {
     <Document>
       <Page size="A4" style={styles.page}>
         {/* Invoice Title */}
+        <View style={{ position: 'absolute', width: '100%', height: '100%', left: 0, top: 0 }}>
+          <Image src={require('../../assets/back2.jpg')} style={{ width: '100%', height: '110%' }} />
+        </View>
         <View style={styles.titleView}>
           <View>
-            <Image src={selectedOrg.logo} style={styles.logo} />
+            <Image src={logo} style={styles.logo} />
           </View>
           <Text style={styles.title}>Invoice</Text>
         </View>
@@ -332,124 +341,123 @@ const Logobill = () => {
 
 
         </div>
-        <div style={{margin:'auto'}}>
-        <div className='page12' >
-          {/* Invoice Title */}
-          <div className='titlediv12' >
-            <div>
-              <img src={selectedOrg.logo} className='logo12' />
+        <div style={{ margin: 'auto' }}>
+          <div className='page123' >
+            {/* Invoice Title */}
+            <div className='titlediv123' >
             </div>
-            <p className='title12' >Invoice</p>
-          </div>
-          {/* Bill To */}
-          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
-            <div>
-              <p className='billTo12'>Bill To:</p>
-              <p style={{ fontSize: 16, marginVertical: 5, fontWeight: 'bold' }}>Mr. Lalan Chaudhary</p>
-              <p style={{ fontSize: 12, marginVertical: 5 }}>+91 8235570955</p>
-              <p style={{ fontSize: 12, marginVertical: 5 }}>lalan28@gmail.com</p>
-            </div>
-            <div>
-              <p className='invoiceDetails12' style={{ fontSize: 14, fontWeight: 'bold' }}>Invoice No. 12345</p>
-              <p className='invoiceDetails12' >16 June 2025</p>
-            </div>
-          </div>
-          {/* Table */}
-          <div className='table12'>
-            <div className='tableRow12'>
-              <p className='tableColHeader12' style={{ width: '5%' }}>#</p>
-              <p className='tableColHeader12' style={{ width: '25%' }}>Item</p>
-              <p className='tableColHeader12' style={{ width: '35%' }}>Description</p>
-              <p className='tableColHeader12' style={{ width: '10%' }}>Qty</p>
-              <p className='tableColHeader12' style={{ width: '10%' }}>rate</p>
-              <p className='tableColHeader12' style={{ width: '15%' }}>Amount</p>
-            </div>
-
-            <div className='tableRow112'>
-              <p className='tableColHeader112' style={{ width: '5%' }}>1</p>
-              <p className='tableColHeader112' style={{ width: '25%' }}>Eardops</p>
-              <p className='tableColHeader112' style={{ width: '35%' }}>Boat fire AirDops</p>
-              <p className='tableColHeader112' style={{ width: '10%' }}>1</p>
-              <p className='tableColHeader112' style={{ width: '10%' }}>1499</p>
-              <p className='tableColHeader112' style={{ width: '15%' }}>999</p>
-            </div>
-
-            <div className='tableRow112'>
-              <p className='tableColHeader212' style={{ width: '5%' }}>1</p>
-              <p className='tableColHeader212' style={{ width: '25%' }}>Eardops</p>
-              <p className='tableColHeader212' style={{ width: '35%' }}>Boat fire AirDops</p>
-              <p className='tableColHeader212' style={{ width: '10%' }}>1</p>
-              <p className='tableColHeader212' style={{ width: '10%' }}>1499</p>
-              <p className='tableColHeader212' style={{ width: '15%' }}>999</p>
-            </div>
-
-            <div className='tableRow112'>
-              <p className='tableColHeader112' style={{ width: '5%' }}>1</p>
-              <p className='tableColHeader112' style={{ width: '25%' }}>Eardops</p>
-              <p className='tableColHeader112' style={{ width: '35%' }}>Boat fire AirDops</p>
-              <p className='tableColHeader112' style={{ width: '10%' }}>1</p>
-              <p className='tableColHeader112' style={{ width: '10%' }}>1499</p>
-              <p className='tableColHeader112' style={{ width: '15%' }}>999</p>
-            </div>
-
-            <div className='tableRow112'>
-              <p className='tableColHeader212' style={{ width: '5%' }}>1</p>
-              <p className='tableColHeader212' style={{ width: '25%' }}>Eardops</p>
-              <p className='tableColHeader212' style={{ width: '35%' }}>Boat fire AirDops</p>
-              <p className='tableColHeader212' style={{ width: '10%' }}>1</p>
-              <p className='tableColHeader212' style={{ width: '10%' }}>1499</p>
-              <p className='tableColHeader212' style={{ width: '15%' }}>999</p>
-            </div>
-
-          </div>
-
-
-
-          {/* Subtotal and Totals */}
-
-          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-            <p style={{ fontSize: 14 }}>Thanks for your buisness</p>
-            <div className='subtotalHeadRow12' >
-              <div className='subtotalRow12'>
-                <p style={{ fontSize: 12 }}>Sub Total</p>
-                <p style={{ fontSize: 12 }}>480</p>
+            {/* <View style={{ position: 'absolute', width: '100%', height: '100%', left: 0, top: 0 ,}}>
+              <Image src={require('../../assets/back2.jpg')} style={{ width: '100%', height: '110%' }} />
+            </View> */}
+            {/* Bill To */}
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
+              <div>
+                <p className='billTo123'>Bill To:</p>
+                <p style={{ fontSize: 16, marginVertical: 5, fontWeight: 'bold' }}>Mr. Lalan Chaudhary</p>
+                <p style={{ fontSize: 12, marginVertical: 5 }}>+91 8235570955</p>
+                <p style={{ fontSize: 12, marginVertical: 5 }}>lalan28@gmail.com</p>
               </div>
-              <div className='subtotalRow12' >
-                <p style={{ fontSize: 12 }}>Tax (18%)</p>
-                <p style={{ fontSize: 12 }}>480</p>
-              </div>
-              <div className='subtotalRow112' >
-                <p style={{ fontSize: 15, color: '#fff' }}>Grand Total</p>
-                <p style={{ fontSize: 15, color: '#fff' }}>480</p>
+              <div>
+                <p className='invoiceDetails123' style={{ fontSize: 14, fontWeight: 'bold' }}>Invoice No. 12345</p>
+                <p className='invoiceDetails123' >16 June 2025</p>
               </div>
             </div>
-          </div>
-          {/* Footer */}
-          <div className='footer12'>
-            <div className='footerInner12'>
-              <div style={{ display: 'flex', flexDirection: 'row', gap: 10, alignItems: 'flex-end', marginTop: 20 }}>
-                <p className='bold12' >Authorized Signature</p>
-                <div style={{ height: 1, width: 120, backgroundColor: '#000' }}></div>
+            {/* Table */}
+            <div className='table123'>
+              <div className='tableRow123'>
+                <p className='tableColHeader123' style={{ width: '5%' }}>#</p>
+                <p className='tableColHeader123' style={{ width: '25%' }}>Item</p>
+                <p className='tableColHeader123' style={{ width: '35%' }}>Description</p>
+                <p className='tableColHeader123' style={{ width: '10%' }}>Qty</p>
+                <p className='tableColHeader123' style={{ width: '10%' }}>rate</p>
+                <p className='tableColHeader123' style={{ width: '15%' }}>Amount</p>
+              </div>
+
+              <div className='tableRow1123'>
+                <p className='tableColHeader1123' style={{ width: '5%' }}>1</p>
+                <p className='tableColHeader1123' style={{ width: '25%' }}>Eardops</p>
+                <p className='tableColHeader1123' style={{ width: '35%' }}>Boat fire AirDops</p>
+                <p className='tableColHeader1123' style={{ width: '10%' }}>1</p>
+                <p className='tableColHeader1123' style={{ width: '10%' }}>1499</p>
+                <p className='tableColHeader1123' style={{ width: '15%' }}>999</p>
+              </div>
+
+              <div className='tableRow1123'>
+                <p className='tableColHeader2123' style={{ width: '5%' }}>1</p>
+                <p className='tableColHeader2123' style={{ width: '25%' }}>Eardops</p>
+                <p className='tableColHeader2123' style={{ width: '35%' }}>Boat fire AirDops</p>
+                <p className='tableColHeader2123' style={{ width: '10%' }}>1</p>
+                <p className='tableColHeader2123' style={{ width: '10%' }}>1499</p>
+                <p className='tableColHeader2123' style={{ width: '15%' }}>999</p>
+              </div>
+
+              <div className='tableRow1123'>
+                <p className='tableColHeader1123' style={{ width: '5%' }}>1</p>
+                <p className='tableColHeader1123' style={{ width: '25%' }}>Eardops</p>
+                <p className='tableColHeader1123' style={{ width: '35%' }}>Boat fire AirDops</p>
+                <p className='tableColHeader1123' style={{ width: '10%' }}>1</p>
+                <p className='tableColHeader1123' style={{ width: '10%' }}>1499</p>
+                <p className='tableColHeader1123' style={{ width: '15%' }}>999</p>
+              </div>
+
+              <div className='tableRow1123'>
+                <p className='tableColHeader2123' style={{ width: '5%' }}>1</p>
+                <p className='tableColHeader2123' style={{ width: '25%' }}>Eardops</p>
+                <p className='tableColHeader2123' style={{ width: '35%' }}>Boat fire AirDops</p>
+                <p className='tableColHeader2123' style={{ width: '10%' }}>1</p>
+                <p className='tableColHeader2123' style={{ width: '10%' }}>1499</p>
+                <p className='tableColHeader2123' style={{ width: '15%' }}>999</p>
+              </div>
+
+            </div>
+
+
+
+            {/* Subtotal and Totals */}
+
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+              <p style={{ fontSize: 14 }}>Thanks for your buisness</p>
+              <div className='subtotalHeadRow123' >
+                <div className='subtotalRow123'>
+                  <p style={{ fontSize: 12 }}>Sub Total</p>
+                  <p style={{ fontSize: 12 }}>480</p>
+                </div>
+                <div className='subtotalRow123' >
+                  <p style={{ fontSize: 12 }}>Tax (18%)</p>
+                  <p style={{ fontSize: 12 }}>480</p>
+                </div>
+                <div className='subtotalRow1123' >
+                  <p style={{ fontSize: 15, color: '#fff' }}>Grand Total</p>
+                  <p style={{ fontSize: 15, color: '#fff' }}>480</p>
+                </div>
               </div>
             </div>
+            {/* Footer */}
+            <div className='footer123'>
+              <div className='footerInner123'>
+                <div style={{ display: 'flex', flexDirection: 'row', gap: 10, alignItems: 'flex-end', marginTop: 20 }}>
+                  <p className='bold123' >Authorized Signature</p>
+                  <div style={{ height: 1, width: 120, backgroundColor: '#000' }}></div>
+                </div>
+              </div>
+            </div>
+            <button className='button-83'>
+              <PDFDownloadLink document={<Invoice />} fileName="invoice.pdf">
+                {({ loading }) => (loading ? 'Loading document...' : 'Download now!')}
+              </PDFDownloadLink>
+            </button>
           </div>
-          <button className='button-83'>
-            <PDFDownloadLink document={<Invoice />} fileName="invoice.pdf">
-              {({ loading }) => (loading ? 'Loading document...' : 'Download now!')}
-            </PDFDownloadLink>
-          </button>
-        </div>
-        <div className='mb-4'>
-          <button className='text-blue-600' onClick={()=>{setRightSidebarshow(true)}}>Change Layout</button>
-        </div>
+          <div className='mb-4'>
+            <button className='text-blue-600' onClick={() => { setRightSidebarshow(true) }}>Change Layout</button>
+          </div>
         </div>
 
       </div>
       {
-        rightSidebarshow &&  <TemplateSidebar setRightSidebarshow={setRightSidebarshow} />
+        rightSidebarshow && <TemplateSidebar setRightSidebarshow={setRightSidebarshow} />
       }
     </div>
   );
 };
 
-export default Logobill;
+export default Template3;

@@ -39,7 +39,7 @@ const InvoicePage = () => {
     }, []);
 
     return (
-        <div className="Main-Container ml-52 max-w-7xl mx-auto px-4">
+        <div className="Main-Container ml-52  mx-auto px-4">
             <Navbar/>
             {/* Header */}
             <div className="flex justify-between items-center py-4">
@@ -70,7 +70,7 @@ const InvoicePage = () => {
                     <div
                         key={invoice.id}
                         className="flex items-center text-sm px-4 py-3 border-b hover:bg-gray-100 cursor-pointer"
-                        onClick={() => navigate(`/dashboard/logobill/${invoice.id}`)}
+                        onClick={() => navigate(`/dashboard/bill/${invoice.id}`)}
                     >
                         {/* Date */}
                         <div className="flex-1 text-left">
