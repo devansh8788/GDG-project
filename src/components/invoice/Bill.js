@@ -16,6 +16,7 @@ const Bill = () => {
   const [invoices, setInvoices] = useState([]);
   const [customerInvoices, setCustomerInvoices] = useState([]);
     const [rightSidebarshow,setRightSidebarshow]=useState(false);
+
     const navigate=useNavigate();
   useEffect(() => {
     const fetchBillData = async () => {
@@ -191,7 +192,6 @@ console.log('====================================');
   });
 
   const Invoice = () => {
-    const [name, setName] = useState("Lalan Chaudhary")
     return (
       <Document>
         <Page size="A4" style={styles.page}>
@@ -208,7 +208,7 @@ console.log('====================================');
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <View>
               <Text style={styles.billTo}>Bill To:</Text>
-              <Text style={{ color: 'blue', fontSize: 10, margin: 5 }}>Mr. {name}</Text>
+              <Text style={{ color: 'blue', fontSize: 10, margin: 5 }}>Mr. {billData.customer.displayName}</Text>
               <Text style={{ fontSize: 10 }}>+91 8235570955</Text>
             </View>
             <View>
@@ -230,6 +230,9 @@ console.log('====================================');
             {
               billData.items.map((item, idx) => {
                 return (
+                  <>
+                              {
+                                idx !== items.length - 1 ? 
                   <View style={styles.tableRow1}>
                     <Text style={[styles.tableColHeader1, { width: '5%' }]}>{idx + 1}</Text>
                     <Text style={[styles.tableColHeader1, { width: '25%' }]}>{item.itemDetails}</Text>
@@ -238,6 +241,9 @@ console.log('====================================');
                     <Text style={[styles.tableColHeader1, { width: '10%' }]}>{item.rate}</Text>
                     <Text style={[styles.tableColHeader1, { width: '15%' }]}>{item.amount}</Text>
                   </View>
+                :''
+              }
+                </>
                 )
               })
             }
