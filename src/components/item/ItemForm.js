@@ -57,7 +57,7 @@ const ItemForm = ({ setFormView, addItem }) => {
 };
 
   return (
-    <div className='w-full h-screen  p-3 relative ml-52'>
+    <div className=' h-screen  p-3 relative ml-52'>
       <h4 className='font-normal text-xl'>New Item</h4>
 
       <div className='flex mt-5 h-10'>
@@ -95,7 +95,7 @@ const ItemForm = ({ setFormView, addItem }) => {
         <p className='text-[#b91c1c] w-32'>Name*</p>
         <input
           placeholder=''
-          className='w-80 rounded border border-gray-300 py-1 focus:border-blue-400'
+          className='w-80 rounded border border-gray-300 py-1 focus:border-blue-400 px-3'
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -119,7 +119,7 @@ const ItemForm = ({ setFormView, addItem }) => {
         <p className='w-32'>Price*</p>
         <input
           type="number"
-          className='w-80 rounded border border-gray-300 py-1 focus:border-blue-400'
+          className='w-80 rounded border border-gray-300 py-1 focus:border-blue-400 px-3'
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />
@@ -129,7 +129,7 @@ const ItemForm = ({ setFormView, addItem }) => {
         <p className='w-32'>Description*</p>
         <textarea
                                 placeholder=''
-                                className='w-80 rounded border border-gray-300 py-1 focus:border-blue-400'
+                                className='w-80 rounded border border-gray-300 py-1 focus:border-blue-400 p-3'
                                 value={description}
                                 name='shippingStreet1'
                                 onChange={(e) => setDescription(e.target.value)}

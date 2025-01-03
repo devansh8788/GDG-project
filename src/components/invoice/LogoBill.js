@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Image } from '@react-pdf/renderer';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { doc, getDoc, collection, getDocs, query } from 'firebase/firestore';
 import { db } from '../../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,6 +18,7 @@ const Logobill = () => {
   const [customerInvoices, setCustomerInvoices] = useState([]);
   const [rightSidebarshow,setRightSidebarshow]=useState(false);
   const [selectedOrg,setSelectedOrg]=useState(null);
+      const navigate=useNavigate();
   useEffect(() => {
     const fetchBillData = async () => {
       try {
@@ -153,7 +154,6 @@ const Logobill = () => {
       borderRightWidth: 1,
       padding: 5,
       textAlign: 'center',
-      backgroundColor: '#bedef1'
     },
     tableCol: {
       width: '33%',
@@ -204,23 +204,21 @@ const Logobill = () => {
       <Page size="A4" style={styles.page}>
         {/* Invoice Title */}
         <View style={styles.titleView}>
-          <View>
-            <Image src={selectedOrg.logo} style={styles.logo} />
-          </View>
+          <Image src={logo} style={styles.logo} />
           <Text style={styles.title}>Invoice</Text>
         </View>
         {/* Bill To */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
           <View>
             <Text style={styles.billTo}>Bill To:</Text>
-            <Text style={{ fontSize: 16, marginVertical: 5, fontWeight: 'bold' }}>Mr. Lalan Chaudhary</Text>
+            <Text style={{ fontSize: 16, marginVertical: 5, fontWeight: 'bold' }}>Mr. {billData.customer.displayName}</Text>
             <Text style={{ fontSize: 10, marginVertical: 2 }}>+91 8235570955</Text>
             <Text style={{ fontSize: 10, marginVertical: 2 }}>lalan28@gmail.com</Text>
             <Text style={{ fontSize: 10, marginVertical: 2 }}>123 Anywhere St,at any</Text>
           </View>
           <View>
-            <Text style={[styles.invoiceDetails, { fontSize: 14, fontWeight: 'bold' }]}>Invoice No. 12345</Text>
-            <Text style={[styles.invoiceDetails]}>16 June 2025</Text>
+            <Text style={[styles.invoiceDetails, { fontSize: 14, fontWeight: 'bold' }]}>Invoice No. INV-{billData.invoiceNumber}</Text>
+            <Text style={[styles.invoiceDetails]}>{billData.invoiceDate}</Text>
           </View>
         </View>
         {/* Table */}
@@ -234,41 +232,23 @@ const Logobill = () => {
             <Text style={[styles.tableColHeader, { width: '15%' }]}>Amount</Text>
           </View>
 
-          <View style={styles.tableRow1}>
-            <Text style={[styles.tableColHeader1, { width: '5%' }]}>1</Text>
-            <Text style={[styles.tableColHeader1, { width: '25%' }]}>Eardops</Text>
-            <Text style={[styles.tableColHeader1, { width: '35%' }]}>Boat fire AirDops</Text>
-            <Text style={[styles.tableColHeader1, { width: '10%' }]}>1</Text>
-            <Text style={[styles.tableColHeader1, { width: '10%' }]}>1499</Text>
-            <Text style={[styles.tableColHeader1, { width: '15%' }]}>999</Text>
-          </View>
-
-          <View style={styles.tableRow1}>
-            <Text style={[styles.tableColHeader2, { width: '5%' }]}>1</Text>
-            <Text style={[styles.tableColHeader2, { width: '25%' }]}>Eardops</Text>
-            <Text style={[styles.tableColHeader2, { width: '35%' }]}>Boat fire AirDops</Text>
-            <Text style={[styles.tableColHeader2, { width: '10%' }]}>1</Text>
-            <Text style={[styles.tableColHeader2, { width: '10%' }]}>1499</Text>
-            <Text style={[styles.tableColHeader2, { width: '15%' }]}>999</Text>
-          </View>
-
-          <View style={styles.tableRow1}>
-            <Text style={[styles.tableColHeader1, { width: '5%' }]}>1</Text>
-            <Text style={[styles.tableColHeader1, { width: '25%' }]}>Eardops</Text>
-            <Text style={[styles.tableColHeader1, { width: '35%' }]}>Boat fire AirDops</Text>
-            <Text style={[styles.tableColHeader1, { width: '10%' }]}>1</Text>
-            <Text style={[styles.tableColHeader1, { width: '10%' }]}>1499</Text>
-            <Text style={[styles.tableColHeader1, { width: '15%' }]}>999</Text>
-          </View>
-
-          <View style={styles.tableRow1}>
-            <Text style={[styles.tableColHeader2, { width: '5%' }]}>1</Text>
-            <Text style={[styles.tableColHeader2, { width: '25%' }]}>Eardops</Text>
-            <Text style={[styles.tableColHeader2, { width: '35%' }]}>Boat fire AirDops</Text>
-            <Text style={[styles.tableColHeader2, { width: '10%' }]}>1</Text>
-            <Text style={[styles.tableColHeader2, { width: '10%' }]}>1499</Text>
-            <Text style={[styles.tableColHeader2, { width: '15%' }]}>999</Text>
-          </View>
+            {
+              billData.items.map((item, idx) => {
+                return (
+                  <>{
+                    idx !== items.length - 1 ? 
+                  <View style={[styles.tableRow1,{backgroundColor: idx % 2===0?'#fff':'#bedef1'}]}  >
+                  <Text style={[styles.tableColHeader2, { width: '5%', }]}>{idx + 1}</Text>
+                  <Text style={[styles.tableColHeader2, { width: '25%' }]}>{item.itemDetails}</Text>
+                  <Text style={[styles.tableColHeader2, { width: '35%' }]}>{item.itemDetails}</Text>
+                  <Text style={[styles.tableColHeader2, { width: '10%' }]}>{item.quantity}</Text>
+                  <Text style={[styles.tableColHeader2, { width: '10%' }]}>{item.rate}</Text>
+                  <Text style={[styles.tableColHeader2, { width: '15%' }]}>{item.amount}</Text>
+                </View>:''
+                }</>
+                )
+              })
+            }
 
         </View>
 
@@ -281,15 +261,19 @@ const Logobill = () => {
           <View style={styles.subtotalHeadRow}>
             <View style={styles.subtotalRow}>
               <Text style={{ fontSize: 10 }}>Sub Total</Text>
-              <Text style={{ fontSize: 10 }}>480</Text>
+              <Text style={{ fontSize: 10 }}>{billData.subTotal}</Text>
             </View>
             <View style={styles.subtotalRow}>
-              <Text style={{ fontSize: 10 }}>Tax (18%)</Text>
-              <Text style={{ fontSize: 10 }}>480</Text>
+              <Text style={{ fontSize: 10 }}>Discount ({billData.discount}%)</Text>
+              <Text style={{ fontSize: 10 }}>{billData.DiscPrice}</Text>
+            </View>
+            <View style={styles.subtotalRow}>
+              <Text style={{ fontSize: 10 }}>Tax ({billData.taxRate}%)</Text>
+              <Text style={{ fontSize: 10 }}>{billData.TaxPrice}</Text>
             </View>
             <View style={styles.subtotalRow1}>
               <Text style={{ fontSize: 15, color: '#fff' }}>Grand Total</Text>
-              <Text style={{ fontSize: 15, color: '#fff' }}>480</Text>
+              <Text style={{ fontSize: 15, color: '#fff' }}>Rs. {billData.total.toFixed(2)}</Text>
             </View>
           </View>
         </View>
@@ -315,7 +299,7 @@ const Logobill = () => {
           {
             customerInvoices.map(customer => {
               return (
-                <div className='border p-2 m-2 my-4'>
+                <div className='border p-2 m-2 my-4' onClick={()=>{navigate(`/dashboard/logobill/${customer.id}`)}}>
                   <div className='flex justify-between'>
                     <p className='text-blue-500'>Mr. {customer.customer.displayName}</p>
                     <p>₹ {customer.total.toFixed(2)}</p>
@@ -344,14 +328,14 @@ const Logobill = () => {
           {/* Bill To */}
           <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 30 }}>
             <div>
-              <p className='billTo12'>Bill To:</p>
-              <p style={{ fontSize: 16, marginVertical: 5, fontWeight: 'bold' }}>Mr. Lalan Chaudhary</p>
+              <p className='billTo12'>Bill To: </p>
+              <p style={{ fontSize: 16, marginVertical: 5, fontWeight: 'bold' }}>Mr. {billData.customer.displayName}</p>
               <p style={{ fontSize: 12, marginVertical: 5 }}>+91 8235570955</p>
               <p style={{ fontSize: 12, marginVertical: 5 }}>lalan28@gmail.com</p>
             </div>
             <div>
-              <p className='invoiceDetails12' style={{ fontSize: 14, fontWeight: 'bold' }}>Invoice No. 12345</p>
-              <p className='invoiceDetails12' >16 June 2025</p>
+              <p className='invoiceDetails12' style={{ fontSize: 14, fontWeight: 'bold' }}>Invoice No. INV-{billData.invoiceNumber}</p>
+              <p className='invoiceDetails12'   >{billData.invoiceDate}</p>
             </div>
           </div>
           {/* Table */}
@@ -364,42 +348,24 @@ const Logobill = () => {
               <p className='tableColHeader12' style={{ width: '10%' }}>rate</p>
               <p className='tableColHeader12' style={{ width: '15%' }}>Amount</p>
             </div>
-
-            <div className='tableRow112'>
-              <p className='tableColHeader112' style={{ width: '5%' }}>1</p>
-              <p className='tableColHeader112' style={{ width: '25%' }}>Eardops</p>
-              <p className='tableColHeader112' style={{ width: '35%' }}>Boat fire AirDops</p>
-              <p className='tableColHeader112' style={{ width: '10%' }}>1</p>
-              <p className='tableColHeader112' style={{ width: '10%' }}>1499</p>
-              <p className='tableColHeader112' style={{ width: '15%' }}>999</p>
-            </div>
-
-            <div className='tableRow112'>
-              <p className='tableColHeader212' style={{ width: '5%' }}>1</p>
-              <p className='tableColHeader212' style={{ width: '25%' }}>Eardops</p>
-              <p className='tableColHeader212' style={{ width: '35%' }}>Boat fire AirDops</p>
-              <p className='tableColHeader212' style={{ width: '10%' }}>1</p>
-              <p className='tableColHeader212' style={{ width: '10%' }}>1499</p>
-              <p className='tableColHeader212' style={{ width: '15%' }}>999</p>
-            </div>
-
-            <div className='tableRow112'>
-              <p className='tableColHeader112' style={{ width: '5%' }}>1</p>
-              <p className='tableColHeader112' style={{ width: '25%' }}>Eardops</p>
-              <p className='tableColHeader112' style={{ width: '35%' }}>Boat fire AirDops</p>
-              <p className='tableColHeader112' style={{ width: '10%' }}>1</p>
-              <p className='tableColHeader112' style={{ width: '10%' }}>1499</p>
-              <p className='tableColHeader112' style={{ width: '15%' }}>999</p>
-            </div>
-
-            <div className='tableRow112'>
-              <p className='tableColHeader212' style={{ width: '5%' }}>1</p>
-              <p className='tableColHeader212' style={{ width: '25%' }}>Eardops</p>
-              <p className='tableColHeader212' style={{ width: '35%' }}>Boat fire AirDops</p>
-              <p className='tableColHeader212' style={{ width: '10%' }}>1</p>
-              <p className='tableColHeader212' style={{ width: '10%' }}>1499</p>
-              <p className='tableColHeader212' style={{ width: '15%' }}>999</p>
-            </div>
+                        {
+                          billData.items.map((item,idx) => {
+                            return (<>
+                              {
+                                idx !== items.length - 1 ? 
+                              <div className='tableRow112' style={{backgroundColor: idx % 2===0?'#fff':'#bedef1'}} >
+                              <p className='tableColHeader112' style={{ width: '5%', }}>{idx + 1}</p>
+                              <p className='tableColHeader112' style={{ width: '25%' }}>{item.itemDetails}</p>
+                              <p className='tableColHeader112' style={{ width: '35%' }}>{item.itemDetails}</p>
+                              <p className='tableColHeader112' style={{ width: '10%' }}>{item.quantity}</p>
+                              <p className='tableColHeader112' style={{ width: '10%' }}>{item.rate}</p>
+                              <p className='tableColHeader112' style={{ width: '15%' }}>{item.amount}</p>
+                            </div>:''
+                              }
+                              </>
+                            )
+                          })
+                        }
 
           </div>
 
@@ -412,15 +378,19 @@ const Logobill = () => {
             <div className='subtotalHeadRow12' >
               <div className='subtotalRow12'>
                 <p style={{ fontSize: 12 }}>Sub Total</p>
-                <p style={{ fontSize: 12 }}>480</p>
+                <p style={{ fontSize: 12 }}>{billData.subTotal}</p>
               </div>
               <div className='subtotalRow12' >
-                <p style={{ fontSize: 12 }}>Tax (18%)</p>
-                <p style={{ fontSize: 12 }}>480</p>
+                <p style={{ fontSize: 12 }}>Discount ({billData.discount}%)</p>
+                <p style={{ fontSize: 12 }}>{billData.DiscPrice}</p>
+              </div>
+              <div className='subtotalRow12' >
+                <p style={{ fontSize: 12 }}>Tax ({billData.taxRate}%)</p>
+                <p style={{ fontSize: 12 }}>{billData.TaxPrice}</p>
               </div>
               <div className='subtotalRow112' >
                 <p style={{ fontSize: 15, color: '#fff' }}>Grand Total</p>
-                <p style={{ fontSize: 15, color: '#fff' }}>480</p>
+                <p style={{ fontSize: 15, color: '#fff' }}>₹ {billData.total.toFixed(2)}</p>
               </div>
             </div>
           </div>

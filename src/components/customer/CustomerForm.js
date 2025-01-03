@@ -233,7 +233,7 @@ const Form = ({ setFormView }) => {
                 <p className='w-32 font-normal text-gray-800 text-sm'>Company Name</p>
                 <input
                     placeholder=''
-                    className='w-96 rounded border border-gray-400 py-1 focus:border-blue-400'
+                    className='w-96 rounded border border-gray-400 py-1 focus:border-blue-400 px-3'
                     name='companyName'
                     value={fulldata.companyName}
                     onChange={(e) => handleChange(e)}
@@ -244,7 +244,7 @@ const Form = ({ setFormView }) => {
                 <p className='text-[#b91c1c] w-32 text-sm'>Display Name*</p>
                 <input
                     placeholder=''
-                    className='w-96 rounded border border-gray-400 py-1 focus:border-blue-400'
+                    className='w-96 rounded border border-gray-400 py-1 focus:border-blue-400 px-3'
                     value={fulldata.displayName}
                     name='displayName'
                     onChange={(e) => handleChange(e)}

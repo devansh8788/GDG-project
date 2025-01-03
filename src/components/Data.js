@@ -10,13 +10,15 @@ import start from '../assets/start.png';
 import footware from '../assets/footware.png';
 import gloves from '../assets/gloves.png';
 import InvoiceTable from "./InvoiceTable";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import MonthlyChart from "./MonthlyChart"
 
 function Dashboard() {
+    const navigate=useNavigate();
     const [invoices, setInvoices] = useState([]);
     const [totalInvoices, setTotalInvoices] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
+    const [pendingAmount,setPendingAmount]=useState(0);
 
     useEffect(() => {
         const fetchInvoices = async () => {
@@ -51,9 +53,14 @@ function Dashboard() {
                 // Calculate total invoices and total amount
                 const totalInvoicesCount = sortedInvoices.length;
                 const totalAmountSum = sortedInvoices.reduce((sum, invoice) => sum + parseFloat(invoice.total || 0), 0);
-                console.log('====================================');
-                console.log(sortedInvoices);
-                console.log('====================================');
+                const pending= sortedInvoices.filter((e)=>{
+                    if(e.terms!=='Paid')
+                    {
+                        return e;
+                    }
+                })
+                const temp=pending.reduce((sum, invoice) => sum + parseFloat(invoice.total || 0), 0);
+                setPendingAmount(temp)
                 setTotalInvoices(totalInvoicesCount);
                 setTotalAmount(totalAmountSum);
             } catch (error) {
@@ -98,7 +105,7 @@ function Dashboard() {
                         style={{ backgroundImage: `url(${man3})` }}
                     >
                         <h3 className="text-sm font-semibold">Pending Payments</h3>
-                        <p className="text-xl font-bold">$2,500</p>
+                        <p className="text-xl font-bold">₹ {pendingAmount.toFixed(2)}</p>
                     </div>
                 </div>
 
@@ -106,7 +113,7 @@ function Dashboard() {
                 <div>
                     <h2 className="text-xl font-bold mb-2">Marketplace</h2>
                     <div className="bg-white p-4 rounded-lg shadow-xl flex justify-between items-center">
-                        <div>
+                        <div className='cursor-pointer' onClick={()=> navigate("/dashboard/analytics")}>
                             <h3 className="text-lg font-bold">Data Analytics Overview</h3>
                             <p className="text-gray-600 text-sm">Track invoices and sales trends.</p>
                         </div>
@@ -164,19 +171,19 @@ function Dashboard() {
                 </div>
                 <div className="mb-8 p-4 py-6 bg-white rounded-lg shadow-lg">
                     <h2 className="text-md font-semibold mb-4">Current Balance</h2>
-                    <p className="text-2xl font-bold mb-4">₹5,320.00</p>
+                    <p className="text-2xl font-bold mb-4">₹{totalAmount.toFixed(0)}</p>
                     <div className="flex items-center space-x-4">
                         <div className="flex items-center">
                             <div className="w-6 h-6 bg-green-100 rounded-full flex justify-center items-center">
                                 <span className="text-green-500 font-bold">+</span>
                             </div>
-                            <p className="ml-1 text-green-500 font-bold">₹1,200.00</p>
+                            <p className="ml-1 text-green-500 font-bold">₹{(totalAmount - pendingAmount).toFixed(0)}</p>
                         </div>
                         <div className="flex items-center">
                             <div className="w-6 h-6 bg-red-100 rounded-full flex justify-center items-center">
                                 <span className="text-red-500 font-bold">−</span>
                             </div>
-                            <p className="ml-1 text-red-500 font-bold">₹300.00</p>
+                            <p className="ml-1 text-red-500 font-bold">₹{pendingAmount.toFixed(0)}</p>
                         </div>
                     </div>
                 </div>
