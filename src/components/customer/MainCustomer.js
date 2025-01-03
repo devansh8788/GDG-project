@@ -77,7 +77,7 @@ const CustomerMain = () => {
                 <HiMagnifyingGlass className='absolute right-8' onClick={() => setSearchView(true)} />
             </div>
             {customers.map(customer => (
-                <div key={customer.id} className='flex items-center text-sm px-4 py-2 font-medium'>
+                <div key={customer.id} className='flex items-center text-sm px-4 py-2 font-medium' onClick={() => navigate(`/dashboard/customerview/${customer.id}`)}>
                     <input type='checkbox' style={{ marginRight: 5, marginTop: 3 }} />
                     <p className='flex-1 text-left text-[#1d4ed8]' style={{ fontSize: 12 }}>{customer.displayName}</p>
                     <p className='flex-1 text-left' style={{ fontSize: 12 }}>{customer.companyName || 'Nothing'}</p>

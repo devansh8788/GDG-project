@@ -125,7 +125,7 @@ function InvoiceTable({ onTableDataChange ,onForm1DataChange}) {
     setRows((prevRows) =>
       prevRows.map((row) =>
         row.id === rowId
-          ? { ...row, itemDetails: product.name, rate: product.price, amount: product.price * row.quantity }
+          ? { ...row, itemDetails: product.name, description:product.description , rate: product.price, amount: product.price * row.quantity }
           : row
       )
     );
@@ -161,7 +161,7 @@ function InvoiceTable({ onTableDataChange ,onForm1DataChange}) {
                     type="text"
                     value={row.itemDetails}
                     onChange={(e) => handleInputChange(row.id, 'itemDetails', e.target.value)}
-                    onFocus={() => setShowDropdown(row.id)}   
+                    onClick={() => setShowDropdown(row.id)}   
                     placeholder="Type or click to select an item."
                     className="w-full p-2 border rounded focus:outline-none"
                   />

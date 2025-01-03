@@ -208,8 +208,9 @@ console.log('====================================');
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <View>
               <Text style={styles.billTo}>Bill To:</Text>
-              <Text style={{ color: 'blue', fontSize: 10, margin: 5 }}>Mr. {billData.customer.displayName}</Text>
-              <Text style={{ fontSize: 10 }}>+91 8235570955</Text>
+              <Text style={{ color: 'blue', fontSize: 10, margin: 5 ,marginBottom:0}}>{billData.customer.salutation} {billData.customer.displayName}</Text>
+              <Text style={{ fontSize: 10 , marginHorizontal: 5 ,marginVertical:5}}>{billData.customer.email}</Text>
+              <Text style={{ fontSize: 10 , marginHorizontal: 5}}>+91 {billData.customer.mobile}</Text>
             </View>
             <View>
               <Text style={styles.invoiceDetails}>Terms: {billData.terms}</Text>
@@ -313,7 +314,7 @@ console.log('====================================');
                   <p>INV-{customer.invoiceNumber}</p>
                   <p>{customer.invoiceDate}</p>
                 </div>
-                <p>Net 15</p>
+                <p style={{color:customer.terms==='Paid'?'#22c55e':'red'}}>{customer.terms}</p>
               </div>
               )
             })
@@ -333,8 +334,9 @@ console.log('====================================');
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <div>
               <p className='billTo'>Bill To:</p>
-              <p style={{ color: 'blue', fontSize: 14, margin: 5 }}>Mr. {billData.customer.displayName}</p>
-              <p style={{ fontSize: 14 }}>+91 8235570955</p>
+              <p style={{ color: 'blue', fontSize: 14, margin: 5 }}>{billData.customer.salutation} {billData.customer.displayName}</p>
+              <p style={{ fontSize: 14, margin: 5 }}>{billData.customer.email}</p>
+              <p style={{ fontSize: 14, margin: 5 }}>+91 {billData.customer.mobile}</p>
             </div>
             <div>
               <p className='invoiceDetails'>Terms: {billData.terms}</p>
@@ -359,7 +361,7 @@ console.log('====================================');
                     idx !== items.length - 1 ? <div className='tableRow1'>
                       <p className='tableColHeader1' style={{ width: '5%' }}>{idx + 1}</p>
                       <p className='tableColHeader1' style={{ width: '25%' }}>{item.itemDetails}</p>
-                      <p className='tableColHeader1' style={{ width: '35%' }}>{item.itemDetails}</p>
+                      <p className='tableColHeader1' style={{ width: '35%' }}>{item.description}</p>
                       <p className='tableColHeader1' style={{ width: '10%' }}>{item.quantity}</p>
                       <p className='tableColHeader1' style={{ width: '10%' }}>{item.rate}</p>
                       <p className='tableColHeader1' style={{ width: '15%' }}>{item.amount}</p>
@@ -402,12 +404,6 @@ console.log('====================================');
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end', marginTop: 20 }}>
                 <p className='bold' >Authorized Signature</p>
                 <div style={{ height: 1, width: 120, backgroundColor: '#000' }}></div>
-              </div>
-              <div>
-                <p className='bold'>Samira Hadid</p>
-                <p>123 Anywhere St, Any City</p>
-                <p>+123-456-7890</p>
-                <p>hello@reallygreatsite.com</p>
               </div>
             </div>
           </div>

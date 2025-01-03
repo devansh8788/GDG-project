@@ -128,7 +128,7 @@ const InvoicePage = () => {
 
 
                         {/* status */}
-                        <div className={`flex-1 text-left`} style={{color: invoice.terms==='Paid'?'green':'red' }} onClick={() => navigate(`/dashboard/bill/${invoice.id}`)}>
+                        <div className={`flex-1 text-left`} style={{color: invoice.terms==='Paid'?'#22c55e':'red' }} onClick={() => navigate(`/dashboard/bill/${invoice.id}`)}>
                             {invoice.customer && invoice.terms
                                 ? invoice.terms
                                 : 'N/A'}
