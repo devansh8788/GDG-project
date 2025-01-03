@@ -55,7 +55,7 @@ function InvoiceForm({ onDataChange }) {
       const db = getFirestore();
       const querySnapshot = await getDocs(collection(db, `organizations/${parsedOrgData.id}/customers`));
 
-      // Map customer data into options with full data stored
+    // Map customer data into options with full data stored
       const data = querySnapshot.docs.map((doc) => {
         const customer = doc.data();
         return {
