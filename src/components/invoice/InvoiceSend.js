@@ -470,11 +470,7 @@ const InvoiceSend = () => {
 
                 </div>
               </div>
-              {/* <button className='button-83'>
-                            <PDFDownloadLink document={<Invoice />} fileName="invoice.pdf">
-                              {({ loading }) => (loading ? 'Loading document...' : 'Download now!')}
-                            </PDFDownloadLink>
-                          </button> */}
+       
             </div>
           </div>
 
