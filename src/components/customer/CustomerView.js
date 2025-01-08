@@ -9,6 +9,8 @@ import { IoCallOutline } from "react-icons/io5";
 import { FaMobileScreen } from "react-icons/fa6";
 import { Accordion, AccordionItem as Item } from "@szhsin/react-accordion";
 import chevron from "./chewrown.svg";
+import Loading from '../Loading';
+import { MdOutlineMail } from "react-icons/md";
 import MonthlyChart from "./MonthlyChart"
 const CustomerView = () => {
   const { id } = useParams();
@@ -68,6 +70,11 @@ const CustomerView = () => {
   
     fetchcustomerData();
   }, [id]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <div className='ml-52'>
       <Navbar />
@@ -95,16 +102,16 @@ const CustomerView = () => {
             <p className='text-sm p-1'>Statements</p>
           </div>
           <div className='flex'>
-          <div className="p-4 bg-gray-50 rounded-lg w-96 h-screen">
+          <div className="p-4 bg-gray-100 rounded-lg w-96 h-screen">
             <p className='border-b py-3'>Company Name</p>
             <div className='my-3'>
               <div className='flex gap-4'>
                 <IoIosContact className='text-[40px]' />
                 <div>
-                  <p className='text-sm font-semibold'>{customerData.salutation} {customerData.displayName}</p>
-                  <p className='text-sm '>{customerData.email}</p>
-                  <p className='flex items-center gap-2'><IoCallOutline /> <span>{customerData.mobile}</span> </p>
-                  <p className='flex items-center gap-2'><FaMobileScreen /> <span>{customerData.workPhone}</span> </p>
+                  <p className='text-sm font-semibold mb-2'>{customerData.salutation} {customerData.displayName}</p>
+                  <p className='text-sm flex items-center gap-2'><MdOutlineMail /> {customerData.email}</p>
+                  <p className='flex items-center gap-2 text-sm'><IoCallOutline /> <span>{customerData.mobile}</span> </p>
+                  <p className='flex items-center gap-2 text-sm'><FaMobileScreen /> <span>{customerData.workPhone}</span> </p>
                 </div>
               </div>
               <div className="mx-2 my-4 border-t">

@@ -387,7 +387,7 @@ const InvoiceSend = () => {
             <div className='p-8 bg-blue-500 text-white font-bold m-2 my-8 text-center'>INVOICE NO: INV-{invoice[0].invoiceNumber}</div>
 
             <div className='w-1/2 m-auto my-8'>
-              <p className='my-4 font-light'>Dear Mr. {invoice[0].customer.displayName}</p>
+              <p className='my-4 font-light'>Dear {invoice[0].customer.salutation} {invoice[0].customer.displayName}</p>
               <p className='font-light'>Thank you for your business. Your invoice can be viewed, printed and downloaded as PDF from the link below. You can also choose to pay it online.</p>
             </div>
             <div className='page bg-white' style={{ margin: 'auto' }}>
@@ -401,7 +401,7 @@ const InvoiceSend = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                 <div>
                   <p className='billTo'>Bill To:</p>
-                  <p style={{ color: 'blue', fontSize: 14, margin: 5 }}>Mr. {invoice[0].customer.displayName}</p>
+                  <p style={{ color: 'blue', fontSize: 14, margin: 5 }}>{invoice[0].customer.salutation} {invoice[0].customer.displayName}</p>
                   <p style={{ fontSize: 14 }}>+91 8235570955</p>
                 </div>
                 <div>

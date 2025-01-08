@@ -1,0 +1,174 @@
+.page112{
+    height:983px;
+      width: 794px;
+      margin: 20px 80px 20px auto ;
+      padding:40px;
+      font-family: Helvetica, sans-serif;
+      position: relative;
+      box-shadow: 0 0 4px rgb(88, 85, 85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  
+    }
+
+    .inner_page112{
+      height: 100%;
+      width: 100%;
+      border: 1px solid;
+    }
+    .titlediv112{
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      /* padding-bottom:30px ; */
+      border-bottom:1px solid black ;
+    padding:10px;
+    }
+    .title112 {
+      font-size: 60px;
+      font-weight: 900; /* 'black' maps to 900 in CSS */
+      margin-bottom: 20px;
+    }
+    
+    .invoiceDetails112 {
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .billTo112 {
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    
+    .table112 {
+      /* display: flex; */
+      width: 100%;
+      margin: 20px 0;
+    }
+    
+    .tableRow112 {
+      /* height: 60px; */
+      display: flex;
+      flex-direction: row;
+      border: 0.5px solid #060606;
+      border-bottom-style: solid;
+      background-color: #f5f6f7;
+      padding: 0px;
+      margin: 0px;
+      border-right-width: 0;
+      border-left-width:0 ;
+    }
+    
+    .tableColHeader112 {
+      font-size: 12px;
+      height: 100%;
+      border-right: 0.5px solid #000;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      margin: 0px;
+      
+    }
+    
+    .tableRow1112 {
+      display: flex;
+      flex-direction: row;
+      border: 0.5px solid #000;
+      border-top-width: 0;
+      border-bottom-style: solid;
+      margin: 0px;
+      border-right-width: 0;
+      border-left-width:0 ;
+    }
+    
+    .tableColHeader1112 {
+      font-size: 12px;
+      border-right: 0.5px solid #000;
+      padding: 10px;
+      text-align: center;
+      margin: 0px;
+    }
+    
+    .subtotalHeadRow {
+      /* Add styles here if needed */
+    }
+    
+    .subtotalRow112 {
+      width: 240px;
+      display: flex;
+      flex-direction: row;
+      border-bottom: 0.4px solid #000;
+      padding: 5px;
+      justify-content:center;
+      margin-top: 7px;
+      margin: 0px;
+    }
+    .footer112 {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+    }
+    .footerInner112 {
+      width: 88%;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      padding: 10px;
+      padding-bottom: 0;
+    }
+    
+    .bold {
+      font-weight: bold;
+    }
+  
+    .DownloadBtn112{
+      padding: 10px 20px;
+      background-color:blue;
+      color: white;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+  
+  
+  /* CSS */
+  .button-83112 {
+    appearance: button;
+    background-color: transparent;
+    background-image: linear-gradient(to bottom, #fff, #f8eedb);
+    border: 0 solid #e5e7eb;
+    border-radius: .5rem;
+    box-sizing: border-box;
+    color: #482307;
+    column-gap: 1rem;
+    cursor: pointer;
+    display: flex;
+    font-family: ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size: 100%;
+    font-weight: 700;
+    line-height: 24px;
+    margin: 0;
+    outline: 2px solid transparent;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    text-transform: none;
+    transition: all .1s cubic-bezier(.4, 0, .2, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    box-shadow: -6px 8px 10px rgba(81,41,10,0.1),0px 2px 2px rgba(81,41,10,0.2);
+    position: absolute;
+    bottom: 20px;
+    left: 320px;
+  }
+  
+  .button-83112:active {
+    background-color: #f3f4f6;
+    box-shadow: -1px 2px 5px rgba(81,41,10,0.15),0px 1px 1px rgba(81,41,10,0.15);
+    transform: translateY(0.125rem);
+  }
+  
+  .button-83112:focus {
+    box-shadow: rgba(72, 35, 7, .46) 0 0 0 4px, -6px 8px 10px rgba(81,41,10,0.1), 0px 2px 2px rgba(81,41,10,0.2);
+  }
+  
