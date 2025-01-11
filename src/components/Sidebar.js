@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaHome, FaFileInvoice, FaBox, FaUserAlt } from 'react-icons/fa';
 import { AiOutlineBarChart } from 'react-icons/ai';
 import logo from '../assets/logo.png';
-
+import { FaClipboardList } from "react-icons/fa";
 const Sidebar = () => {
   const [active, setActive] = useState('home');
   const navigate = useNavigate();
@@ -27,6 +27,7 @@ const Sidebar = () => {
         <SidebarLink to="/dashboard/invoice" title="Invoice" icon={<FaFileInvoice />} active={active} setActive={setActive} />
         <SidebarLink to="/dashboard/product" title="Product" icon={<FaBox />} active={active} setActive={setActive} />
         <SidebarLink to="/dashboard/customer" title="Client" icon={<FaUserAlt />} active={active} setActive={setActive} />
+        <SidebarLink to="/dashboard/expenses" title="Expenses" icon={<FaClipboardList />} active={active} setActive={setActive} />
         <SidebarLink to="/dashboard/analytics" title="Analytics" icon={<AiOutlineBarChart />} active={active} setActive={setActive} />
        
       </nav>

@@ -168,7 +168,7 @@ const Form = ({ setFormView }) => {
     };
 
     return (
-        <div className='w-full  p-3 relative ml-52 pl-6'>
+        <div className='  p-3 relative ml-52 pl-6'>
                   <ToastContainer />
             <h4 className='text-2xl  text-gray-800 mb-4 border-b-2 border-black-500 pb-1'>
                 New Customer
