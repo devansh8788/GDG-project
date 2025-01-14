@@ -24,10 +24,9 @@ const Sidebar = () => {
       {/* Navigation Links */}
       <nav className="flex flex-col space-y-2">
   <SidebarLink to="/dashboard/home" title="Home" icon={<FaHome />} active={active} setActive={setActive} />
-  <SidebarLink to="/dashboard/invoice" title="Invoice" icon={<FaFileInvoice />} active={active} setActive={setActive} />
-  <SidebarLink to="/dashboard/product" title="Product" icon={<FaBox />} active={active} setActive={setActive} />
   <SidebarLink to="/dashboard/customer" title="Client" icon={<FaUserAlt />} active={active} setActive={setActive} />
-  
+  <SidebarLink to="/dashboard/product" title="Product" icon={<FaBox />} active={active} setActive={setActive} />
+  <SidebarLink to="/dashboard/invoice" title="Invoice" icon={<FaFileInvoice />} active={active} setActive={setActive} />
   <SidebarLink to="/dashboard/expenses" title="Expenses" icon={<FaClipboardList />} active={active} setActive={setActive} className="mt-4" />
   <SidebarLink to="/dashboard/analytics" title="Analytics" icon={<AiOutlineBarChart />} active={active} setActive={setActive} />
   <SidebarLink to="/dashboard/reports" title="Reports" icon={<FaFileAlt />} active={active} setActive={setActive} />
