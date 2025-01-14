@@ -53,7 +53,7 @@ const MainPage = () => {
                 <div className='flex gap-2'>
                     <button
                         className="bg-[#408dfb] flex items-center p-2 px-3 gap-1 text-sm rounded text-white"
-                        onClick={() => navigate('/dashboard/customerform')}
+                        onClick={() => navigate('/dashboard/expensesform')}
                     >
                         <FaPlus /> New
                     </button>
