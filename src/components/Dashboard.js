@@ -19,6 +19,7 @@ import CustomerView from './customer/CustomerView';
 import Template2 from './invoice/Template2';
 import MainPage from './expenses/MainPage';
 import ExpanseForm from './expenses/ExpanseForm';
+import Main from './Reports/Main';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -54,6 +55,7 @@ const Dashboard = () => {
             <Route path="analytics" element={<Chart />} />
             <Route path="invoice" element={<MainData/>}/>
             <Route path="invoiceform" element={<Invoice/>}/>
+            <Route path="reports" element={<Main/>}/>
 
             <Route path="product" element={<Item />} />
             <Route path="customer" element={<Customer/>} />
