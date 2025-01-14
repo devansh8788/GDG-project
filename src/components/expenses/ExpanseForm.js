@@ -94,7 +94,7 @@ function InvoiceForm() {
   return (
     <div className="p-6 bg-white rounded-lg  mx-auto ml-52">
       <div className="mb-4">
-        <label className="block text-red-500 font-semibold text-sm mb-1">Category Name*</label>
+        <label className="block text-red-500 font-semibold text-sm mb-1">Name*</label>
         <Select
           options={customerOptions}
           value={customerOptions.find((option) => option.value === selectedCustomer?.id)}
