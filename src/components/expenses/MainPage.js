@@ -30,7 +30,7 @@ const MainPage = () => {
                 }
 
                 const db = getFirestore(); // Initialize Firestore here
-                const querySnapshot = await getDocs(collection(db, `organizations/${parsedOrgData.id}/customers`));
+                const querySnapshot = await getDocs(collection(db, `organizations/${parsedOrgData.id}/expenses`));
                 const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 setCustomers(data);
             } catch (error) {
@@ -79,12 +79,12 @@ const MainPage = () => {
             {customers.map(customer => (
                 <div key={customer.id} className='flex items-center text-sm px-4 py-2 font-medium' onClick={() => navigate(`/dashboard/customerview/${customer.id}`)}>
                     <input type='checkbox' style={{ marginRight: 5, marginTop: 3 }} />
-                    <p className='flex-1 text-left text-[#1d4ed8]' style={{ fontSize: 12 }}>{customer.displayName}</p>
-                    <p className='flex-1 text-left' style={{ fontSize: 12 }}>{customer.companyName || 'Nothing'}</p>
-                    <p className='flex-1 text-left' style={{ fontSize: 12 }}>{customer.email}</p>
-                    <p className='flex-1 text-left' style={{ fontSize: 12 }}>{customer.workPhone}</p>
+                    <p className='flex-1 text-left text-[#1d4ed8]' style={{ fontSize: 12 }}>{customer.selectedCustomer.fullData.displayName}</p>
+                    <p className='flex-1 text-left' style={{ fontSize: 12 }}>{customer.categoryOptions || 'Nothing'}</p>
+                    <p className='flex-1 text-left' style={{ fontSize: 12 }}>{customer.expensesNumber}</p>
+                    <p className='flex-1 text-left' style={{ fontSize: 12 }}>{customer.workPhone || 'Non-Billable'}</p>
                     <p className='flex-1 text-left' style={{ fontSize: 12 }}>10/10/2024</p>
-                    <p className='flex-1 text-left' style={{ fontSize: 12 }}>₹{customer.unusedCredits || '0.00'}</p>
+                    <p className='flex-1 text-left' style={{ fontSize: 12 }}>₹{customer.amount || '0.00'}</p>
                 </div>
             ))}
         </div>

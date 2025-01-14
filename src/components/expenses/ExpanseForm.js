@@ -82,6 +82,8 @@ function InvoiceForm() {
         collection(db, `organizations/${parsedOrgData.id}/expenses`),
         ExpensesData
       );
+      alert("ho gaya")
+      navigate("/dashboard/expenses")
 
     } catch (error) {
       console.error("Error saving invoice: ", error);
@@ -160,7 +162,7 @@ function InvoiceForm() {
       </div>
       <div className='h-16 w-full bottom-0 left-0 fixed border border-1 flex items-center shadow-md bg-white ml-52'>
                 <div className='flex gap-3 px-8 '>
-                    <button className='bg-[#408dfb] flex items-center px-2 py-1 gap-1 text-sm rounded text-white' style={{ fontSize: 13 }}>Save</button>
+                    <button className='bg-[#408dfb] flex items-center px-2 py-1 gap-1 text-sm rounded text-white' style={{ fontSize: 13 }} onClick={handleSave}>Save</button>
                     <button className='px-2 py-1 border bg-[#e5e7eb] rounded font-medium' style={{ fontSize: 13 }} >Cancel</button>
                 </div>
             </div>
