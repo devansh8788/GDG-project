@@ -7,7 +7,7 @@ import backgroundImage from "../../assets/r-back.svg";
 const sections = [
   {
     title: "Sales",
-    links: ["Sales by Customer", "Sales by Sales Person", "Sales by Item"],
+    links: ["Sales by Customer", "Sales by Item"],
   },
   {
     title: "Receivables",
@@ -38,13 +38,13 @@ const App = () => {
           }}
         >
           {/* Header */}
-          <h1 className="text-2xl  mb-4">Reports Center</h1>
+          <h1 className="text-2xl mb-4">Reports Center</h1>
           {/* Search Bar */}
           <div className="w-full max-w-md px-4">
             <input
               type="text"
               placeholder="Search reports"
-              className="w-full px-4 py-2 rounded-md border border-gray-300 -sm focus:ring-1 focus:ring-blue-400 focus:outline-none"
+              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-1 focus:ring-blue-400 focus:outline-none"
             />
           </div>
         </div>
@@ -68,7 +68,7 @@ const App = () => {
                       className="flex justify-between items-center border-b border-dotted border-gray-300 pb-2 last:border-none"
                     >
                       <Link
-                        to={`/reports/${link.replace(/\s+/g, "-").toLowerCase()}`}
+                        to={`${link.replace(/\s+/g, "-").toLowerCase()}`}
                         className="text-blue-500 hover:underline text-sm"
                       >
                         {link}
@@ -90,4 +90,3 @@ const App = () => {
 };
 
 export default App;
-
