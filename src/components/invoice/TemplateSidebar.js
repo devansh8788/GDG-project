@@ -18,7 +18,7 @@ const TemplateSidebar = ({setRightSidebarshow , id}) => {
       <img src={template2} className='h-52 border-2' onClick={()=>{navigate(`/dashboard/logobill/${id}`)}} />
       <img src={template3} className='h-52 border-2' onClick={()=>{navigate(`/dashboard/template3/${id}`)}} />
       <img src={template4} className='h-52 border-2' onClick={()=>{navigate(`/dashboard/template2/${id}`)}} />
-      <img src={template5} className='h-52 border-2' />
+      <img src={template5} className='h-52 border-2' onClick={()=>{navigate(`/dashboard/template4/${id}`)}} />
       </div>
       <div className="m-6 flex items-center justify-center mt-24">
         <img

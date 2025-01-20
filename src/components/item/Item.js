@@ -184,7 +184,7 @@ const handleChange=()=>{
             </p>
             <div className='flex items-center space-x-2'>
               <button
-                onClick={() => handleEdit(item)}
+                onClick={() => navigate("/dashboard/item/update",{ state: { item: item } })}
                 className='flex items-center bg-transparent text-[#408dfb] py-1 px-2 rounded hover:bg-[#e0f2fe] transition'
               >
                 <FaEdit className='mr-1' />
@@ -213,15 +213,6 @@ const handleChange=()=>{
             </div>
           </div>
         ))}
-
-      {formView && (
-        <ItemForm
-          addItem={addItem}
-          currentItem={currentItem}
-          setFormView={setFormView}
-          setItemData={setItemData}
-        />
-      )}
     </div>
   );
 };

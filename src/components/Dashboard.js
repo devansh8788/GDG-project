@@ -20,6 +20,10 @@ import Template2 from './invoice/Template2';
 import MainPage from './expenses/MainPage';
 import ExpanseForm from './expenses/ExpanseForm';
 import Main from './Reports/Main';
+import ExpensesView from './expenses/ExpansesView';
+import UpdateForm from './expenses/UpdateForm';
+import Template4 from './invoice/Template4';
+import UpdateItem from './item/UpdateItem';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -56,18 +60,21 @@ const Dashboard = () => {
             <Route path="invoice" element={<MainData/>}/>
             <Route path="invoiceform" element={<Invoice/>}/>
             <Route path="reports" element={<Main/>}/>
-
             <Route path="product" element={<Item />} />
             <Route path="customer" element={<Customer/>} />
             <Route path="customerform" element={<Customerform/>}/>
             <Route path="/expenses" element={<MainPage/>}/>
             <Route path="/expensesform" element={<ExpanseForm/>}/>
+            <Route path="/updateform" element={<UpdateForm/>}/>
+            <Route path="/expenses/view/:id" element={<ExpensesView/>}/>
             <Route path="/bill/:id" element={<BillPage />} />
             <Route path="/logobill/:id" element={<Logobill />} />
-            <Route path="/template2/:id" element={<Template2 />} />
-            <Route path="/template3/:id" element={<Template3 />} />
+            <Route path="/template2/:id" element={<Template3 />} />
+            <Route path="/template3/:id" element={<Template2 />} />
+            <Route path="/template4/:id" element={<Template4 />} />
             <Route path="/customerView/:id" element={<CustomerView />} />
             <Route path="/item" element={<ItemForm />} />
+            <Route path="/item/update" element={<UpdateItem />} />
             <Route path="/email" element={<InvoiceSend />} />
                   </Routes>
         )}
