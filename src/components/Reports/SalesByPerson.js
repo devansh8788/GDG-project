@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaBars, FaFilter } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
-import { db } from "../../firebase"; // Import your Firestore config
+import { db } from "../../firebase";
 import { collection, query, getDocs } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -19,7 +19,6 @@ export default function SalesByCustomer() {
   });
   const [loading, setLoading] = useState(true);
 
-  // Fetch data dynamically
   useEffect(() => {
     const fetchSalesData = async () => {
       setLoading(true);
@@ -32,9 +31,7 @@ export default function SalesByCustomer() {
           return;
         }
 
-        const q = query(
-          collection(db, `organizations/${parsedOrgData.id}/invoices`)
-        );
+        const q = query(collection(db, `organizations/${parsedOrgData.id}/invoices`));
         const querySnapshot = await getDocs(q);
 
         const fetchedInvoices = querySnapshot.docs.map((doc) => ({
@@ -82,14 +79,10 @@ export default function SalesByCustomer() {
 
   const totalInvoices = salesData.reduce((sum, item) => sum + item.invoices, 0);
   const totalSales = salesData.reduce((sum, item) => sum + item.sales, 0);
-  const totalSalesWithTax = salesData.reduce(
-    (sum, item) => sum + item.salesWithTax,
-    0
-  );
+  const totalSalesWithTax = salesData.reduce((sum, item) => sum + item.salesWithTax, 0);
 
   return (
     <div className="min-h-screen bg-gray-50 ml-52">
-      {/* Top Navigation */}
       <div className="bg-white shadow-sm p-3 rounded-md flex justify-between items-center">
         <div className="flex items-center gap-2">
           <FaBars className="text-gray-600 cursor-pointer text-sm" />
@@ -97,33 +90,20 @@ export default function SalesByCustomer() {
         </div>
       </div>
 
-      {/* Filters Section */}
       <div className="bg-white shadow-sm p-3 rounded-md mt-3 flex flex-wrap gap-2 items-center">
         <button className="flex items-center gap-2 bg-gray-100 text-gray-600 px-3 py-1 rounded-md text-sm">
           <FaFilter /> Filters :
         </button>
 
         <div className="relative">
-          <button
-            onClick={() => toggleDropdown("dateRange")}
-            className="flex items-center gap-2 border px-3 py-1 rounded-md cursor-pointer text-sm"
-          >
+          <button onClick={() => toggleDropdown("dateRange")} className="flex items-center gap-2 border px-3 py-1 rounded-md cursor-pointer text-sm">
             Date Range: {filters.dateRange}
             <IoIosArrowDown className="text-gray-500" />
           </button>
           {dropdowns.dateRange && (
             <div className="absolute bg-white shadow-md rounded-md mt-1 w-48">
-              {[
-                "This Month",
-                "Last Month",
-                "Last 3 Months",
-                "This Year",
-              ].map((option) => (
-                <div
-                  key={option}
-                  onClick={() => updateFilter("dateRange", option)}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                >
+              {["This Month", "Last Month", "Last 3 Months", "This Year"].map((option) => (
+                <div key={option} onClick={() => updateFilter("dateRange", option)} className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">
                   {option}
                 </div>
               ))}
@@ -132,15 +112,12 @@ export default function SalesByCustomer() {
         </div>
       </div>
 
-      {/* Report Section */}
       <div className="bg-white shadow-sm p-6 rounded-md mt-3">
         {loading ? (
           <p className="text-gray-500 text-center text-sm">Loading sales data...</p>
         ) : (
           <>
-            <h2 className="text-gray-700 text-md font-semibold text-center">
-              Sales by Customer
-            </h2>
+            <h2 className="text-gray-700 text-md font-semibold text-center">Sales by Customer</h2>
             <table className="w-full border-collapse mt-6">
               <thead>
                 <tr className="border-b bg-gray-100 text-gray-600 text-xs">
