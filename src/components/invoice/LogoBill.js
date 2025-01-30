@@ -10,6 +10,9 @@ import './Logobill.css'
 import Navbar from '../Navbar';
 import logo from '../../assets/logo123.png'
 import TemplateSidebar from './TemplateSidebar';
+import { GrEdit } from "react-icons/gr";
+import { IoMdPrint } from "react-icons/io";
+import { FaRegShareSquare } from "react-icons/fa";
 const Logobill = () => {
   const { id } = useParams();
   const [billData, setBillData] = useState(null);
@@ -316,7 +319,16 @@ const Logobill = () => {
 
 
         </div>
-        <div style={{margin:'auto'}}>
+        <div>
+          <div className='p-4 text-lg font-semibold'>INV-{billData.invoiceNumber}</div>
+          <div className='flex w-full border bg-gray-200'>
+            <p className='inline border-r border-gray-400 p-2 px-4 cursor-pointer'> <span ><GrEdit className='inline' /></span> Edit</p>
+            <p className='inline border-r border-gray-400  p-2 px-4'> <IoMdPrint className='inline' />                 <PDFDownloadLink document={<Invoice />} fileName="invoice.pdf">
+                  {({ loading }) => (loading ? 'Loading document...' : 'Print')}
+                </PDFDownloadLink></p>
+            <p className='inline border-r border-gray-400  p-2 px-4'> <FaRegShareSquare className='inline' /> Share</p>
+          </div>
+        <div style={{ marginLeft: 50 }}>
         <div className='page12' >
           {/* Invoice Title */}
           <div className='titlediv12' >
@@ -413,7 +425,7 @@ const Logobill = () => {
           <button className='text-blue-600' onClick={()=>{setRightSidebarshow(true)}}>Change Layout</button>
         </div>
         </div>
-
+        </div>
       </div>
       {
         rightSidebarshow &&  <TemplateSidebar setRightSidebarshow={setRightSidebarshow} />

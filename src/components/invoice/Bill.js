@@ -9,45 +9,48 @@ import 'jspdf-autotable';
 import './bill.css'
 import Navbar from '../Navbar';
 import TemplateSidebar from './TemplateSidebar';
+import { GrEdit } from "react-icons/gr";
+import { IoMdPrint } from "react-icons/io";
+import { FaRegShareSquare } from "react-icons/fa";
 const Bill = () => {
   const { id } = useParams();
   const [billData, setBillData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [invoices, setInvoices] = useState([]);
   const [customerInvoices, setCustomerInvoices] = useState([]);
-    const [rightSidebarshow,setRightSidebarshow]=useState(false);
+  const [rightSidebarshow, setRightSidebarshow] = useState(false);
 
-    const navigate=useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchBillData = async () => {
       try {
         const orgData = await AsyncStorage.getItem('selectedOrganization');
         const parsedOrgData = orgData ? JSON.parse(orgData) : null;
-  
+
         if (!parsedOrgData || !parsedOrgData.id) {
           alert('No valid organization selected!');
           setLoading(false);
           return;
         }
-  
+
         const docRef = doc(db, `organizations/${parsedOrgData.id}/invoices`, id);
         const docSnap = await getDoc(docRef);
-  
+
         if (docSnap.exists()) {
           const billData = docSnap.data();
           setBillData(billData);
-  
+
           const q = query(
             collection(db, `organizations/${parsedOrgData.id}/invoices`)
           );
           const querySnapshot = await getDocs(q);
-  
+
           const fetchedInvoices = querySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
           }));
           setInvoices(fetchedInvoices);
-  
+
           const filteredInvoices = fetchedInvoices.filter(invoice =>
             invoice.customer.id === billData.customer.id
           );
@@ -61,10 +64,10 @@ const Bill = () => {
         setLoading(false);
       }
     };
-  
+
     fetchBillData();
   }, [id]);
-  
+
   // useEffect(() => {
   //     const fetchInvoices = async () => {
   //         try {
@@ -98,9 +101,9 @@ const Bill = () => {
 
   const { invoiceNumber, customer, items, total, createdAt } = billData;
 
-console.log('====================================');
-console.log(customerInvoices);
-console.log('====================================');
+  console.log('====================================');
+  console.log(customerInvoices);
+  console.log('====================================');
   const styles = StyleSheet.create({
     page: {
       padding: 30,
@@ -208,9 +211,9 @@ console.log('====================================');
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <View>
               <Text style={styles.billTo}>Bill To:</Text>
-              <Text style={{ color: 'blue', fontSize: 10, margin: 5 ,marginBottom:0}}>{billData.customer.salutation} {billData.customer.displayName}</Text>
-              <Text style={{ fontSize: 10 , marginHorizontal: 5 ,marginVertical:5}}>{billData.customer.email}</Text>
-              <Text style={{ fontSize: 10 , marginHorizontal: 5}}>+91 {billData.customer.mobile}</Text>
+              <Text style={{ color: 'blue', fontSize: 10, margin: 5, marginBottom: 0 }}>{billData.customer.salutation} {billData.customer.displayName}</Text>
+              <Text style={{ fontSize: 10, marginHorizontal: 5, marginVertical: 5 }}>{billData.customer.email}</Text>
+              <Text style={{ fontSize: 10, marginHorizontal: 5 }}>+91 {billData.customer.mobile}</Text>
             </View>
             <View>
               <Text style={styles.invoiceDetails}>Terms: {billData.terms}</Text>
@@ -232,19 +235,19 @@ console.log('====================================');
               billData.items.map((item, idx) => {
                 return (
                   <>
-                              {
-                                idx !== items.length - 1 ? 
-                  <View style={styles.tableRow1}>
-                    <Text style={[styles.tableColHeader1, { width: '5%' }]}>{idx + 1}</Text>
-                    <Text style={[styles.tableColHeader1, { width: '25%' }]}>{item.itemDetails}</Text>
-                    <Text style={[styles.tableColHeader1, { width: '35%' }]}>{item.itemDetails}</Text>
-                    <Text style={[styles.tableColHeader1, { width: '10%' }]}>{item.quantity}</Text>
-                    <Text style={[styles.tableColHeader1, { width: '10%' }]}>{item.rate}</Text>
-                    <Text style={[styles.tableColHeader1, { width: '15%' }]}>{item.amount}</Text>
-                  </View>
-                :''
-              }
-                </>
+                    {
+                      idx !== items.length - 1 ?
+                        <View style={styles.tableRow1}>
+                          <Text style={[styles.tableColHeader1, { width: '5%' }]}>{idx + 1}</Text>
+                          <Text style={[styles.tableColHeader1, { width: '25%' }]}>{item.itemDetails}</Text>
+                          <Text style={[styles.tableColHeader1, { width: '35%' }]}>{item.itemDetails}</Text>
+                          <Text style={[styles.tableColHeader1, { width: '10%' }]}>{item.quantity}</Text>
+                          <Text style={[styles.tableColHeader1, { width: '10%' }]}>{item.rate}</Text>
+                          <Text style={[styles.tableColHeader1, { width: '15%' }]}>{item.amount}</Text>
+                        </View>
+                        : ''
+                    }
+                  </>
                 )
               })
             }
@@ -303,123 +306,133 @@ console.log('====================================');
       <div className='flex'>
         <div className='left_bar border w-80 '>
           {
-            customerInvoices.map(customer=>{
-              return(
-                <div className='border p-2 m-2 my-4' onClick={()=>{navigate(`/dashboard/bill/${customer.id}`)}} >
-                <div className='flex justify-between'>
-                  <p className='text-blue-500'>Mr. {customer.customer.displayName}</p>
-                  <p>₹ {customer.total.toFixed(2)}</p>
+            customerInvoices.map(customer => {
+              return (
+                <div className='border p-2 m-2 my-4' onClick={() => { navigate(`/dashboard/bill/${customer.id}`) }} >
+                  <div className='flex justify-between'>
+                    <p className='text-blue-500'>Mr. {customer.customer.displayName}</p>
+                    <p>₹ {customer.total.toFixed(2)}</p>
+                  </div>
+                  <div className='flex  justify-between font-light text-sm'>
+                    <p>INV-{customer.invoiceNumber}</p>
+                    <p>{customer.invoiceDate}</p>
+                  </div>
+                  <p style={{ color: customer.terms === 'Paid' ? '#22c55e' : 'red' }}>{customer.terms}</p>
                 </div>
-                <div className='flex gap-6 font-light text-sm'>
-                  <p>INV-{customer.invoiceNumber}</p>
-                  <p>{customer.invoiceDate}</p>
-                </div>
-                <p style={{color:customer.terms==='Paid'?'#22c55e':'red'}}>{customer.terms}</p>
-              </div>
               )
             })
           }
 
 
         </div>
-        <div style={{margin:'auto'}}>
-        <div className='page'>
-          <div className='titlediv'>
-            <div>
-              <p className='invoiceDetails'>Invoice No. INV-{billData.invoiceNumber}</p>
-              <p className='invoiceDetails'>Invoice Date: {billData.invoiceDate}</p>
-            </div>
-            <p className='title'>Invoice</p>
+        <div>
+          <div className='p-4 text-lg font-semibold'>INV-{billData.invoiceNumber}</div>
+          <div className='flex w-full border bg-gray-200'>
+            <p className='inline border-r border-gray-400 p-2 px-4 cursor-pointer'> <span ><GrEdit className='inline' /></span> Edit</p>
+            <p className='inline border-r border-gray-400  p-2 px-4'> <IoMdPrint className='inline' /><PDFDownloadLink document={<Invoice />} fileName="invoice.pdf">
+                  {({ loading }) => (loading ? 'Loading document...' : 'Print')}
+                </PDFDownloadLink></p>
+            <p className='inline border-r border-gray-400  p-2 px-4'> <FaRegShareSquare className='inline' /> Share</p>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-            <div>
-              <p className='billTo'>Bill To:</p>
-              <p style={{ color: 'blue', fontSize: 14, margin: 5 }}>{billData.customer.salutation} {billData.customer.displayName}</p>
-              <p style={{ fontSize: 14, margin: 5 }}>{billData.customer.email}</p>
-              <p style={{ fontSize: 14, margin: 5 }}>+91 {billData.customer.mobile}</p>
+          <div style={{ marginLeft: 50 }}>
+            <div className='page'>
+              <div className='titlediv'>
+                <div>
+                  <p className='invoiceDetails'>Invoice No. INV-{billData.invoiceNumber}</p>
+                  <p className='invoiceDetails'>Invoice Date: {billData.invoiceDate}</p>
+                </div>
+                <p className='title'>Invoice</p>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                <div>
+                  <p className='billTo'>Bill To:</p>
+                  <p style={{ color: 'blue', fontSize: 14, margin: 5 }}>{billData.customer.salutation} {billData.customer.displayName}</p>
+                  <p style={{ fontSize: 14, margin: 5 }}>{billData.customer.email}</p>
+                  <p style={{ fontSize: 14, margin: 5 }}>+91 {billData.customer.mobile}</p>
+                </div>
+                <div>
+                  <p className='invoiceDetails'>Terms: {billData.terms}</p>
+                  <p className='invoiceDetails'>Due Date: {billData.dueDate}</p>
+                </div>
+              </div>
+
+
+              <div className='table'>
+                <div className='tableRow'>
+                  <p className='tableColHeader' style={{ width: '5%' }}>#</p>
+                  <p className='tableColHeader' style={{ width: '25%' }}>Item</p>
+                  <p className='tableColHeader' style={{ width: '35%' }}>Description</p>
+                  <p className='tableColHeader' style={{ width: '10%' }}>Qty</p>
+                  <p className='tableColHeader' style={{ width: '10%' }}>Rate (₹)</p>
+                  <p className='tableColHeader' style={{ width: '15%',borderRight:0 }}>Amount (₹)</p>
+                </div>
+                {
+                  billData.items.map((item, idx) => {
+                    return (<>
+                      {
+                        idx !== items.length - 1 ? <div className='tableRow1'>
+                          <p className='tableColHeader1' style={{ width: '5%' }}>{idx + 1}</p>
+                          <p className='tableColHeader1' style={{ width: '25%' }}>{item.itemDetails}</p>
+                          <p className='tableColHeader1' style={{ width: '35%' }}>{item.description}</p>
+                          <p className='tableColHeader1' style={{ width: '10%' }}>{item.quantity}</p>
+                          <p className='tableColHeader1' style={{ width: '10%' }}>{item.rate}</p>
+                          <p className='tableColHeader1' style={{ width: '15%',borderRight:0 }}>{item.amount}</p>
+                        </div> : <></>
+                      }
+
+                    </>
+
+                    )
+                  })
+                }
+
+
+
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <p style={{ fontSize: 14 }}>Thanks for your buisness</p>
+                <div className='subtotalHeadRow' >
+                  <div className='subtotalRow' >
+                    <p style={{ fontSize: 12, width: '60%' }}>Sub Total</p>
+                    <p style={{ fontSize: 12 }}>{billData.subTotal}</p>
+                  </div>
+                  <div className='subtotalRow'>
+                    <p style={{ fontSize: 12, width: '60%' }}>Discount ({billData.discount}%)</p>
+                    <p style={{ fontSize: 12 }}>{billData.DiscPrice}</p>
+                  </div>
+                  <div className='subtotalRow'>
+                    <p style={{ fontSize: 12, width: '60%' }}>Tax ({billData.taxRate}%)</p>
+                    <p style={{ fontSize: 12, }}>{billData.TaxPrice}</p>
+                  </div>
+                  <div className='subtotalRow' >
+                    <p style={{ fontSize: 16, fontWeight: 'bold', margin: 0, padding: 5, width: '60%' }}>Grand Total</p>
+                    <p style={{ fontSize: 16, fontWeight: 'bold', margin: 0, padding: 5 }}>{billData.total.toFixed(2)}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className='footer' >
+                <div className='footerInner'>
+                  <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end', marginTop: 20 }}>
+                    <p className='bold' >Authorized Signature</p>
+                    <div style={{ height: 1, width: 120, backgroundColor: '#000' }}></div>
+                  </div>
+                </div>
+              </div>
+              <button className='button-83'>
+                <PDFDownloadLink document={<Invoice />} fileName="invoice.pdf">
+                  {({ loading }) => (loading ? 'Loading document...' : 'Download now!')}
+                </PDFDownloadLink>
+              </button>
             </div>
-            <div>
-              <p className='invoiceDetails'>Terms: {billData.terms}</p>
-              <p className='invoiceDetails'>Due Date: {billData.dueDate}</p>
+            <div className='mb-4'>
+              <button className='text-blue-600' onClick={() => { setRightSidebarshow(true) }}>Change Layout</button>
             </div>
           </div>
-
-
-          <div className='table'>
-            <div className='tableRow'>
-              <p className='tableColHeader' style={{ width: '5%' }}>#</p>
-              <p className='tableColHeader' style={{ width: '25%' }}>Item</p>
-              <p className='tableColHeader' style={{ width: '35%' }}>Description</p>
-              <p className='tableColHeader' style={{ width: '10%' }}>Qty</p>
-              <p className='tableColHeader' style={{ width: '10%' }}>Rate (₹)</p>
-              <p className='tableColHeader' style={{ width: '15%' }}>Amount (₹)</p>
-            </div>
-            {
-              billData.items.map((item, idx) => {
-                return (<>
-                  {
-                    idx !== items.length - 1 ? <div className='tableRow1'>
-                      <p className='tableColHeader1' style={{ width: '5%' }}>{idx + 1}</p>
-                      <p className='tableColHeader1' style={{ width: '25%' }}>{item.itemDetails}</p>
-                      <p className='tableColHeader1' style={{ width: '35%' }}>{item.description}</p>
-                      <p className='tableColHeader1' style={{ width: '10%' }}>{item.quantity}</p>
-                      <p className='tableColHeader1' style={{ width: '10%' }}>{item.rate}</p>
-                      <p className='tableColHeader1' style={{ width: '15%' }}>{item.amount}</p>
-                    </div> : <></>
-                  }
-
-                </>
-
-                )
-              })
-            }
-
-
-
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between'}}>
-            <p style={{ fontSize: 14 }}>Thanks for your buisness</p>
-            <div className='subtotalHeadRow' >
-              <div className='subtotalRow' >
-                <p style={{ fontSize: 12, width: '60%' }}>Sub Total</p>
-                <p style={{ fontSize: 12 }}>{billData.subTotal}</p>
-              </div>
-              <div className='subtotalRow'>
-                <p style={{ fontSize: 12, width: '60%' }}>Discount ({billData.discount}%)</p>
-                <p style={{ fontSize: 12 }}>{billData.DiscPrice}</p>
-              </div>
-              <div className='subtotalRow'>
-                <p style={{ fontSize: 12, width: '60%' }}>Tax ({billData.taxRate}%)</p>
-                <p style={{ fontSize: 12, }}>{billData.TaxPrice}</p>
-              </div>
-              <div className='subtotalRow' >
-                <p style={{ fontSize: 16, fontWeight: 'bold', margin: 0, padding: 5, width: '60%' }}>Grand Total</p>
-                <p style={{ fontSize: 16, fontWeight: 'bold', margin: 0, padding: 5 }}>{billData.total.toFixed(2)}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className='footer' >
-            <div className='footerInner'>
-              <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end', marginTop: 20 }}>
-                <p className='bold' >Authorized Signature</p>
-                <div style={{ height: 1, width: 120, backgroundColor: '#000' }}></div>
-              </div>
-            </div>
-          </div>
-          <button className='button-83'>
-            <PDFDownloadLink document={<Invoice />} fileName="invoice.pdf">
-              {({ loading }) => (loading ? 'Loading document...' : 'Download now!')}
-            </PDFDownloadLink>
-          </button>
-        </div>
-        <div className='mb-4'>
-          <button className='text-blue-600' onClick={()=>{setRightSidebarshow(true)}}>Change Layout</button>
-        </div>
         </div>
       </div>
       {
-        rightSidebarshow &&  <TemplateSidebar setRightSidebarshow={setRightSidebarshow} id={id} />
+        rightSidebarshow && <TemplateSidebar setRightSidebarshow={setRightSidebarshow} id={id} />
       }
     </div>
   );

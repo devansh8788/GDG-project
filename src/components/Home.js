@@ -74,7 +74,7 @@ const Home = () => {
         <Navbar selectedOrg={selectedOrg} setIsSidebarOpen={setIsSidebarOpen} />
 
         {/* Dashboard Content */}
-        <Data />
+        <Data setLoading={setLoading} />
       </div>
     </div>
   );

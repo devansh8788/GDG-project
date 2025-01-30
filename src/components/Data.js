@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaSearch, FaBell } from 'react-icons/fa';
 import { db } from '../firebase';  // Make sure you import the db from your firebase setup
-import { query, collection, getDocs } from 'firebase/firestore';
+import { query, collection, getDocs, getFirestore } from 'firebase/firestore';
 import man from '../assets/man.png';
 import man2 from '../assets/man2.png';
 import man3 from '../assets/man3.png';
@@ -12,65 +12,129 @@ import gloves from '../assets/gloves.png';
 import InvoiceTable from "./InvoiceTable";
 import { Link, useNavigate } from 'react-router-dom';
 import MonthlyChart from "./MonthlyChart"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function Dashboard() {
-    const navigate=useNavigate();
-    const [invoices, setInvoices] = useState([]);
-    const [totalInvoices, setTotalInvoices] = useState(0);
-    const [totalAmount, setTotalAmount] = useState(0);
-    const [pendingAmount,setPendingAmount]=useState(0);
-
-    useEffect(() => {
-        const fetchInvoices = async () => {
-            try {
-                const orgData = localStorage.getItem('selectedOrganization');
-                const parsedOrgData = orgData ? JSON.parse(orgData) : null;
-
-                if (!parsedOrgData || !parsedOrgData.id) {
-                    alert("No valid organization selected!");
-                    return;
-                }
-
-                const q = query(
-                    collection(db, `organizations/${parsedOrgData.id}/invoices`)
-                );
-                const querySnapshot = await getDocs(q);
-                const fetchedInvoices = querySnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
-
-                // Sort invoices by date in ascending order (oldest first)
-                const sortedInvoices = fetchedInvoices.sort((a, b) => {
-                    const dateA = a.date ? a.date.toDate() : 0; // Ensure `date` is a valid timestamp
-                    const dateB = b.date ? b.date.toDate() : 0;
-                    return dateA - dateB;
-                });
-
-                // Set the fetched and sorted invoices
-                setInvoices(sortedInvoices);
-
-                // Calculate total invoices and total amount
-                const totalInvoicesCount = sortedInvoices.length;
-                const totalAmountSum = sortedInvoices.reduce((sum, invoice) => sum + parseFloat(invoice.total || 0), 0);
-                const pending= sortedInvoices.filter((e)=>{
-                    if(e.terms!=='Paid')
-                    {
-                        return e;
+function Dashboard({setLoading}) {
+        const navigate = useNavigate();
+        const [invoices, setInvoices] = useState([]);
+        const [totalInvoices, setTotalInvoices] = useState(0);
+        const [totalAmount, setTotalAmount] = useState(0);
+        const [pendingAmount, setPendingAmount] = useState(0);
+        const [expenses, setExpenses] = useState(null);
+        const [topCustomers, setTopCustomers] = useState([]);
+    
+        useEffect(() => {
+            const fetchInvoices = async () => {
+                try {
+                    const orgData = localStorage.getItem('selectedOrganization');
+                    const parsedOrgData = orgData ? JSON.parse(orgData) : null;
+    
+                    if (!parsedOrgData || !parsedOrgData.id) {
+                        alert("No valid organization selected!");
+                        return;
                     }
-                })
-                const temp=pending.reduce((sum, invoice) => sum + parseFloat(invoice.total || 0), 0);
-                setPendingAmount(temp)
-                setTotalInvoices(totalInvoicesCount);
-                setTotalAmount(totalAmountSum);
-            } catch (error) {
-                console.error("Error fetching invoices: ", error);
-            }
-        };
-
-        fetchInvoices();
-    }, []);
-
+    
+                    const q = query(
+                        collection(db, `organizations/${parsedOrgData.id}/invoices`)
+                    );
+                    const querySnapshot = await getDocs(q);
+                    const fetchedInvoices = querySnapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data(),
+                    }));
+    
+                    // Sort invoices by date in ascending order (oldest first)
+                    const sortedInvoices = fetchedInvoices.sort((a, b) => {
+                        const dateA = a.date ? a.date.toDate() : 0; // Ensure `date` is a valid timestamp
+                        const dateB = b.date ? b.date.toDate() : 0;
+                        return dateA - dateB;
+                    });
+    
+                    setInvoices(sortedInvoices);
+    
+                    const totalInvoicesCount = sortedInvoices.length;
+                    const totalAmountSum = sortedInvoices.reduce((sum, invoice) => sum + parseFloat(invoice.total || 0), 0);
+                    const pending = sortedInvoices.filter(e => e.terms !== 'Paid');
+                    const temp = pending.reduce((sum, invoice) => sum + parseFloat(invoice.total || 0), 0);
+                    setPendingAmount(temp);
+                    setTotalInvoices(totalInvoicesCount);
+                    setTotalAmount(totalAmountSum);
+                } catch (error) {
+                    console.error("Error fetching invoices: ", error);
+                }
+            };
+    
+            fetchInvoices();
+        }, []);
+    
+        useEffect(() => {
+            const fetchData = async () => {
+                try {
+                    const orgData = await AsyncStorage.getItem('selectedOrganization');
+                    console.log("Fetched organization data:", orgData);
+                    const parsedOrgData = orgData ? JSON.parse(orgData) : null;
+    
+                    if (!parsedOrgData || !parsedOrgData.id) {
+                        console.error("No valid organization selected!");
+                        return;
+                    }
+    
+                    const db = getFirestore();
+                    const querySnapshot = await getDocs(collection(db, `organizations/${parsedOrgData.id}/expenses`));
+                    const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    const totalAmountSum = data.reduce((sum, expense) => sum + parseFloat(expense.amount || 0), 0);
+                    setExpenses(totalAmountSum);
+                } catch (error) {
+                    console.error("Error fetching items: ", error);
+                }
+            };
+    
+            fetchData();
+        }, []);
+    
+        useEffect(() => {
+            const processInvoices = async () => {
+                setLoading(true); // Start loading
+                try {
+                    if (invoices.length > 0) {
+                        const customerInvoiceCount = {};
+        
+                        invoices.forEach(invoice => {
+                            const customer = invoice.customer;
+                            if (customer && customer.displayName) {
+                                if (!customerInvoiceCount[customer.displayName]) {
+                                    // Initialize customer with object and count
+                                    customerInvoiceCount[customer.displayName] = {
+                                        customer,
+                                        count: 0
+                                    };
+                                }
+                                // Increment the count for the customer
+                                customerInvoiceCount[customer.displayName].count += 1;
+                            }
+                        });
+        
+                        console.log('Customer Invoice Count:', customerInvoiceCount);
+        
+                        // Sort customers by count in descending order
+                        const sortedCustomers = Object.values(customerInvoiceCount)
+                            .sort((a, b) => b.count - a.count);
+        
+                        console.log('Sorted Customers:', sortedCustomers);
+        
+                        // Set the top 2 customers
+                        setTopCustomers(sortedCustomers.slice(0, 2));
+                    }
+                } catch (error) {
+                    console.error('Error processing invoices:', error);
+                } finally {
+                    setLoading(false); // End loading
+                }
+            };
+        
+            processInvoices();
+        }, [invoices]);
+        
     return (
         <div className="flex min-h-screen bg-gray-100">
             {/* Left Section */}
@@ -171,7 +235,7 @@ function Dashboard() {
                 </div>
                 <div className="mb-8 p-4 py-6 bg-white rounded-lg shadow-lg">
                     <h2 className="text-md font-semibold mb-4">Current Balance</h2>
-                    <p className="text-2xl font-bold mb-4">₹{totalAmount.toFixed(0)}</p>
+                    <p className="text-2xl font-bold mb-4">₹{totalAmount.toFixed(0) - expenses}</p>
                     <div className="flex items-center space-x-4">
                         <div className="flex items-center">
                             <div className="w-6 h-6 bg-green-100 rounded-full flex justify-center items-center">
@@ -191,39 +255,38 @@ function Dashboard() {
                 {/* Activity Section */}
                 <div className="mb-4 p-4 rounded-lg">
                     <div className="flex justify-between items-center mb-2">
-                        <h4 className="text-md font-bold">Recent Activity</h4>
-                        <span className="text-purple-500 cursor-pointer text-sm">See All</span>
+                        <h4 className="text-md font-bold">Total Expenses</h4>
+                        <span className="text-purple-500 cursor-pointer text-sm" onClick={()=>{navigate("/dashboard/expenses")}}>See All</span>
                     </div>
                     <div className="space-y-2">
                         <div className="flex items-center space-x-2">
-                            <div className="w-6 h-6 bg-purple-500 rounded-full flex justify-center items-center">
+                            {/* <div className="w-6 h-6 bg-purple-500 rounded-full flex justify-center items-center">
                                 <div className="w-3 h-3 bg-white rounded"></div>
-                            </div>
+                            </div> */}
                             <div className="flex-1 flex justify-between items-center text-sm">
-                                <span className="font-bold">Invoice Paid</span>
-                                <p className="text-xs text-gray-400">Today, 10:30 AM</p>
-                                <span className="font-bold">$600</span>
+                                {/* <span className="font-bold">Invoice Paid</span> */}
+                                <span className="font-bold text-lg">₹{expenses}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Top Categories */}
-                <div className="p-2">
+                {/* <div className="p-2">
                     <h4 className="text-md font-bold mb-2">Top Clients</h4>
                     <div className="flex justify-between mb-1">
-                        <div className="p-2 bg-yellow-100 rounded-lg shadow-xl flex flex-col w-1/2 mr-1">
+                        <div className="p-2 bg-yellow-100 rounded-lg shadow-xl flex flex-col w-1/2 mr-1 cursor-pointer" onClick={() => navigate(`/dashboard/customerview/${topCustomers[0].customer.id}`)}>
                             <img src={footware} alt="Footwear" className="w-6 h-6 mb-2 object-cover" />
-                            <span className="text-md font-bold mb-1">Client A</span>
-                            <span className="text-gray-600 text-xs">Invoices: 5</span>
+                            <span className="text-md font-bold mb-1">{topCustomers[0].customer.displayName}</span>
+                            <span className="text-gray-600 text-xs">Invoices: {topCustomers[1].count}</span>
                         </div>
-                        <div className="p-2 bg-green-100 rounded-lg shadow-xl flex flex-col w-1/2 ml-1">
+                        <div className="p-2 bg-green-100 rounded-lg shadow-xl flex flex-col w-1/2 ml-1 cursor-pointer" onClick={() => navigate(`/dashboard/customerview/${topCustomers[1].customer.id}`)} >
                             <img src={gloves} alt="Gloves" className="w-6 h-6 mb-2 object-cover" />
-                            <span className="text-md font-bold mb-1">Client B</span>
-                            <span className="text-gray-600 text-xs">Invoices: 3</span>
+                            <span className="text-md font-bold mb-1">{topCustomers[1].customer.displayName}</span>
+                            <span className="text-gray-600 text-xs">Invoices: {topCustomers[1].count}</span>
                         </div>
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     );

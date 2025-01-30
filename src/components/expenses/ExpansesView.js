@@ -12,6 +12,7 @@ import Loading from '../Loading';
 import { MdOutlineMail } from "react-icons/md";
 import { GrEdit } from "react-icons/gr";
 import { IoMdPrint } from "react-icons/io";
+import { Document, Page, Text, View, StyleSheet, PDFDownloadLink } from '@react-pdf/renderer';
 const ExpensesView = () => {
     const { id } = useParams();
     const [customerData, setcustomerData] = useState(null);
@@ -77,6 +78,76 @@ const ExpensesView = () => {
         return <Loading />;
     }
 
+      const styles = StyleSheet.create({
+        page: {
+          padding: 30,
+          fontFamily: 'Helvetica',
+        },
+        titleView: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
+          paddingBottom: 20,
+          borderBottomWidth: 1,
+          marginBottom:30
+        },
+        heading:{
+            fontSize:12
+        },
+        amount:{
+            fontSize:16,
+            color:'red',
+            marginVertical:4
+        },
+        date:{
+            fontSize:10,
+            color:'gray'
+        },
+        category:{
+            marginVertical:4,
+            fontSize:16,
+            padding:5,
+            backgroundColor:'#c5e3ec',
+            width:70,
+            marginBottom:20
+        },
+        ref:{
+            fontSize:14
+        },
+        customer:{
+            fontSize:12,
+            marginTop:20
+        },
+        customerName:{
+            fontSize:12,
+            color:'blue'
+        }
+      });
+    
+      const Invoice = () => {
+        return (
+          <Document>
+            <Page size="A4" style={styles.page}>
+              {/* Invoice Title */}
+              <View style={styles.titleView}>
+                <Text>Expense Details</Text>
+              </View>
+              <View className='p-2 py-4'>
+                        <Text style={styles.heading}>Expense amount</Text>
+                        <Text style={styles.amount}>Rs. {customerData.amount}.00 <Text style={styles.date}>on {customerData.expensesDate}</Text></Text>
+                        <Text style={styles.category}>Material</Text>
+                        <Text style={styles.ref}>Ref#</Text>
+                        <Text style={styles.ref}>{customerData.expensesNumber}</Text>
+                        <Text style={styles.customer}>Customer</Text>
+                        <Text style={styles.customerName}>{customerData.selectedCustomer}</Text>
+                        <Text style={styles.customer}>{customerData.notes}</Text>
+                    </View>
+            </Page>
+          </Document>
+        )
+      };
+    
+
     return (
         <div className='ml-52'>
             <Navbar />
@@ -85,9 +156,9 @@ const ExpensesView = () => {
                     {
                         customers.map((expenses)=>{
                             return (
-                                <div className='border p-2 m-2 my-4'  >
+                                <div className='border p-2 m-2 my-4' onClick={() => navigate(`/dashboard/expenses/view/${expenses.id}`)}  >
                                 <div className='flex justify-between'>
-                                    <p className='text-blue-500'>Mr. {expenses.selectedCustomer}</p>
+                                    <p className='text-blue-500'>{expenses.selectedCustomer}</p>
                                     <p>₹ {expenses.amount}</p>
                                 </div>
                                 <div className='flex gap-6 font-light text-sm py-2'>
@@ -103,7 +174,9 @@ const ExpensesView = () => {
                     <p className='p-3 text-xl'>Expense Details</p>
                     <div className='flex w-full border'>
                         <p className='inline border-r border-l p-2 cursor-pointer' onClick={() => navigate("/dashboard/updateform", { state: { customerData: customerData } })}> <span ><GrEdit className='inline' /></span> Edit</p>
-                        <p className='inline border-r p-2'> <IoMdPrint className='inline' /> Print</p>
+            <p className='inline border-r border-gray-400  p-2 px-4'> <IoMdPrint className='inline' /><PDFDownloadLink document={<Invoice />} fileName="invoice.pdf">
+                  {({ loading }) => (loading ? 'Loading document...' : 'Print')}
+                </PDFDownloadLink></p>
                     </div>
                     <div className='p-2 py-4'>
                         <p className='text-sm'>Expense amount</p>
@@ -113,6 +186,7 @@ const ExpensesView = () => {
                         <p>{customerData.expensesNumber}</p>
                         <p className='mt-4'>Customer</p>
                         <p className='text-sm text-blue-600'>{customerData.selectedCustomer}</p>
+                        <p className='text-sm my-4'>{customerData.notes}</p>
                     </div>
                 </div>
             </div>

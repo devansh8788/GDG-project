@@ -148,7 +148,7 @@ const InvoicePage = () => {
                         </div>
                         {/* Balance due  */}
                         <div className="flex-1 text-left" onClick={() => navigate(`/dashboard/bill/${invoice.id}`)}>
-                            ₹{typeof invoice.total === 'number' ? invoice.total.toFixed(2) : '0.00'}
+                            ₹{invoice.terms !== 'Paid' ? invoice.total.toFixed(2) : '0.00'}
                         </div>
                         <div className="flex-2 text-left">
                             <FaRegEdit onClick={() => { handleClick(invoice.id) }} />

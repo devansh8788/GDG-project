@@ -9,6 +9,9 @@ import 'jspdf-autotable';
 import './Template2.css'
 import Navbar from '../Navbar';
 import TemplateSidebar from './TemplateSidebar';
+import { GrEdit } from "react-icons/gr";
+import { IoMdPrint } from "react-icons/io";
+import { FaRegShareSquare } from "react-icons/fa";
 const Template2 = () => {
     const { id } = useParams();
     const [billData, setBillData] = useState(null);
@@ -322,7 +325,16 @@ const Template2 = () => {
 
 
                 </div>
-                <div style={{ margin: 'auto' }}>
+                        <div>
+                          <div className='p-4 text-lg font-semibold'>INV-{billData.invoiceNumber}</div>
+                          <div className='flex w-full border bg-gray-200'>
+                            <p className='inline border-r border-gray-400 p-2 px-4 cursor-pointer'> <span ><GrEdit className='inline' /></span> Edit</p>
+                            <p className='inline border-r border-gray-400  p-2 px-4'> <IoMdPrint className='inline' />                 <PDFDownloadLink document={<Invoice />} fileName="invoice.pdf">
+                                  {({ loading }) => (loading ? 'Loading document...' : 'Print')}
+                                </PDFDownloadLink></p>
+                            <p className='inline border-r border-gray-400  p-2 px-4'> <FaRegShareSquare className='inline' /> Share</p>
+                          </div>
+                <div style={{ marginLeft: 50 }}>
                     <div className='page112'>
                         <div className='inner_page112'>
                             <div className='titlediv112'>
@@ -414,10 +426,11 @@ const Template2 = () => {
                                 </PDFDownloadLink>
                             </button>
                         </div>
-                        {/* <div className='mb-4'>
-                            <button className='text-blue-600' onClick={() => { setRightSidebarshow(true) }}>Change Layout</button>
-                        </div> */}
                     </div>
+                    <div className='mb-4'>
+                            <button className='text-blue-600' onClick={() => { setRightSidebarshow(true) }}>Change Layout</button>
+                        </div>
+                </div>
                 </div>
             </div>
             {
