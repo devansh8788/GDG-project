@@ -4,62 +4,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getFirestore, collection, getDocs, query, addDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
-function InvoiceForm() {
+function ExpanseForm() {
   const navigate=useNavigate();
-  const [customerOptions, setCustomerOptions] = useState([]);
-  const [categoryOptions, setCategoryOptions] = useState(null);
+  // const [customerOptions, setCustomerOptions] = useState([]);
+  const [categoryOptions, setCategoryOptions] = useState('Labour'); // Set a default value matching one of the options
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [expensesDate, setExpensesDate] = useState('');
   const [expensesNumber, setexpensesNumber] = useState('');
   const [amount,setAmount]=useState(null);
   const [notes,setNotes]=useState('');
-  // Fetch customer data from Firestore
-  const fetchData = async () => {
-    try {
-      const orgData = await AsyncStorage.getItem('selectedOrganization');
-      const parsedOrgData = orgData ? JSON.parse(orgData) : null;
-
-      if (!parsedOrgData || !parsedOrgData.id) {
-        console.error('No valid organization selected!');
-        return;
-      }
-
-      const db = getFirestore();
-      const querySnapshot = await getDocs(collection(db, `organizations/${parsedOrgData.id}/customers`));
-
-      // Map customer data into options with full data stored
-      const data = querySnapshot.docs.map((doc) => {
-        const customer = doc.data();
-        return {
-          value: doc.id,
-          label: customer.displayName || 'Unnamed Customer',
-          fullData: {
-            id: doc.id,
-            salutation: customer.salutation,
-            firstName: customer.firstName,
-            lastName: customer.lastName,
-            companyName: customer.companyName,
-            displayName: customer.displayName,
-            currency: customer.currency,
-            email: customer.email,
-            workPhone: customer.workPhone,
-            mobile: customer.mobile,
-            pan: customer.pan,
-          },
-        };
-      });
-
-      setCustomerOptions(data);
-    } catch (error) {
-      console.error('Error fetching customers: ', error);
-    }
-  };
-
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const handleSave = async () => {
     try {
       const orgData = await AsyncStorage.getItem('selectedOrganization');
@@ -95,13 +48,7 @@ function InvoiceForm() {
     <div className="p-6 bg-white rounded-lg  mx-auto ml-52">
       <div className="mb-4">
         <label className="block text-red-500 font-semibold text-sm mb-1">Name*</label>
-        <Select
-          options={customerOptions}
-          value={customerOptions.find((option) => option.value === selectedCustomer?.id)}
-          onChange={(selectedOption) => setSelectedCustomer(selectedOption)}
-          placeholder="Select or add a customer"
-          className="w-full text-sm"
-        />
+        <input placeholder='Name' onChange={(e)=>{setSelectedCustomer(e.target.value)}} className='w-full p-2 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-blue-500' />
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-4">
@@ -170,4 +117,4 @@ function InvoiceForm() {
   );
 }
 
-export default InvoiceForm;
+export default ExpanseForm;

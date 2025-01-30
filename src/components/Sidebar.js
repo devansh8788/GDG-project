@@ -54,4 +54,6 @@ const SidebarLink = ({ to, title, icon, active, setActive }) => (
   </Link>
 );
 
+
 export default Sidebar;
+
