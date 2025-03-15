@@ -215,9 +215,8 @@ const Logobill = () => {
           <View>
             <Text style={styles.billTo}>Bill To:</Text>
             <Text style={{ fontSize: 16, marginVertical: 5, fontWeight: 'bold' }}>Mr. {billData.customer.displayName}</Text>
-            <Text style={{ fontSize: 10, marginVertical: 2 }}>+91 8235570955</Text>
-            <Text style={{ fontSize: 10, marginVertical: 2 }}>lalan28@gmail.com</Text>
-            <Text style={{ fontSize: 10, marginVertical: 2 }}>123 Anywhere St,at any</Text>
+            <Text style={{ fontSize: 10, marginVertical: 2 }}>{billData.customer.mobile}</Text>
+            <Text style={{ fontSize: 10, marginVertical: 2 }}>{billData.customer.email}</Text>
           </View>
           <View>
             <Text style={[styles.invoiceDetails, { fontSize: 14, fontWeight: 'bold' }]}>Invoice No. INV-{billData.invoiceNumber}</Text>

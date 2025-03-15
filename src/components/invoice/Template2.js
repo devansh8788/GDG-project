@@ -68,53 +68,25 @@ const Template2 = () => {
         fetchBillData();
     }, [id]);
 
-    // useEffect(() => {
-    //     const fetchInvoices = async () => {
-    //         try {
-    //             const orgData = localStorage.getItem('selectedOrganization');
-    //             const parsedOrgData = orgData ? JSON.parse(orgData) : null;
-
-    //             if (!parsedOrgData || !parsedOrgData.id) {
-    //                 alert("No valid organization selected!");
-    //                 return;
-    //             }
-
-    //             const q = query(
-    //                 collection(db, `organizations/${parsedOrgData.id}/invoices`)
-    //             );
-    //             const querySnapshot = await getDocs(q);
-    //             const fetchedInvoices = querySnapshot.docs.map(doc => ({
-    //                 id: doc.id,
-    //                 ...doc.data(),
-    //             }));
-    //             setInvoices(fetchedInvoices);
-    //         } catch (error) {
-    //             console.error("Error fetching invoices: ", error);
-    //         }
-    //     };
-
-    //     fetchInvoices();
-    // }, []);
 
     if (loading) return <div className="text-center mt-8">Loading...</div>;
     if (!billData) return <div className="text-center mt-8">No data available.</div>;
 
     const { invoiceNumber, customer, items, total, createdAt } = billData;
 
-    console.log('====================================');
-    console.log(customerInvoices);
-    console.log('====================================');
     const styles = StyleSheet.create({
         page: {
             padding: 30,
             fontFamily: 'Helvetica',
+            borderWidth:1
         },
         titleView: {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'flex-end',
             paddingBottom: 20,
-            borderBottomWidth: 1
+            borderBottomWidth: 1,
+            paddingHorizontal:20
         },
         title: {
             fontSize: 60,
@@ -198,6 +170,7 @@ const Template2 = () => {
         return (
             <Document>
                 <Page size="A4" style={styles.page}>
+                    <View style={{borderWidth:1,height:'98%'}}>
                     {/* Invoice Title */}
                     <View style={styles.titleView}>
                         <View>
@@ -208,7 +181,7 @@ const Template2 = () => {
                     </View>
 
                     {/* Bill To */}
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end',paddingHorizontal:20 }}>
                         <View>
                             <Text style={styles.billTo}>Bill To:</Text>
                             <Text style={{ color: 'blue', fontSize: 10, margin: 5, marginBottom: 0 }}>{billData.customer.salutation} {billData.customer.displayName}</Text>
@@ -287,13 +260,8 @@ const Template2 = () => {
                                 <Text style={styles.bold}>Authorized Signature</Text>
                                 <View style={{ height: 1, width: 120, backgroundColor: '#000' }}></View>
                             </View>
-                            <View>
-                                <Text style={styles.bold}>Samira Hadid</Text>
-                                <Text>123 Anywhere St, Any City</Text>
-                                <Text>+123-456-7890</Text>
-                                <Text>hello@reallygreatsite.com</Text>
-                            </View>
                         </View>
+                    </View>
                     </View>
                 </Page>
             </Document>

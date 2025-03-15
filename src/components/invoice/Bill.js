@@ -287,12 +287,6 @@ const Bill = () => {
                 <Text style={styles.bold}>Authorized Signature</Text>
                 <View style={{ height: 1, width: 120, backgroundColor: '#000' }}></View>
               </View>
-              <View>
-                <Text style={styles.bold}>Samira Hadid</Text>
-                <Text>123 Anywhere St, Any City</Text>
-                <Text>+123-456-7890</Text>
-                <Text>hello@reallygreatsite.com</Text>
-              </View>
             </View>
           </View>
         </Page>
