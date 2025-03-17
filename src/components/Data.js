@@ -205,13 +205,12 @@ function Dashboard({setLoading}) {
 
                         {/* Customer Name */}
                         <div className="w-1/4">
-                            Customer: {invoice.customer.displayName ? invoice.customer.displayName
-                                :  'N/A'}
-                        </div>
+    Customer: {invoice.customer?.displayName || 'N/A'}
+</div>
 
                         {/* Email */}
                         <div className="w-1/3">
-                            Email: {invoice.customer.email || 'N/A'}
+                            Email: {invoice.customer?.email || 'N/A'}
                         </div>
                         {/* Date and Amount */}
                         <div className="w-1/5 text-center">

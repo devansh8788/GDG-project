@@ -52,7 +52,7 @@ export default function SalesByItem() {
         });
 
         setSalesData(Object.values(groupedData));
-      } catch (error) {
+      } catch (error) {    
         console.error("Error fetching sales data:", error);
       } finally {
         setLoading(false);
@@ -81,7 +81,7 @@ export default function SalesByItem() {
             <table className="w-full border-collapse mt-5 text-xs">
               <thead>
                 <tr className="border-b bg-gray-100 text-gray-600">
-                  <th className="py-1 px-2 text-left">ITEM NAME</th>
+                  <th className="py-1 px-2 text-left">ITEM NAME</th>  
                   <th className="py-1 px-2 text-center">ITEM COUNT</th>
                   <th className="py-1 px-2 text-left">TOTAL REVENUE (INR)</th>
                 </tr>
