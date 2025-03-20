@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getFirestore, collection, getDocs, query } from 'firebase/firestore';
-import { db } from '../../firebase';
-function InvoiceForm({ onDataChange }) {
+import { db } from '../../../firebase';
+function EditInvoiceForm({ onDataChange ,billData}) {
   const [customerOptions, setCustomerOptions] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [invoiceDate, setInvoiceDate] = useState('');
+  const [invoiceDate, setInvoiceDate] = useState(billData.invoiceDate);
   const [invoiceNumber, setInvoiceNumber] = useState('INV-000001');
-  const [terms, setTerms] = useState('Due On Receipt');
+  const [terms, setTerms] = useState(billData.terms);
   const [dueDate, setDueDate] = useState('');
     const [invoices, setInvoices] = useState([]);
 
@@ -207,4 +207,4 @@ function InvoiceForm({ onDataChange }) {
   );
 }
 
-export default InvoiceForm;
+export default EditInvoiceForm;

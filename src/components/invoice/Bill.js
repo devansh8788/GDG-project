@@ -38,6 +38,9 @@ const Bill = () => {
 
         if (docSnap.exists()) {
           const billData = docSnap.data();
+          console.log('====================================');
+          console.log(billData);
+          console.log('====================================');
           setBillData(billData);
 
           const q = query(
@@ -67,34 +70,6 @@ const Bill = () => {
 
     fetchBillData();
   }, [id]);
-
-  // useEffect(() => {
-  //     const fetchInvoices = async () => {
-  //         try {
-  //             const orgData = localStorage.getItem('selectedOrganization');
-  //             const parsedOrgData = orgData ? JSON.parse(orgData) : null;
-
-  //             if (!parsedOrgData || !parsedOrgData.id) {
-  //                 alert("No valid organization selected!");
-  //                 return;
-  //             }
-
-  //             const q = query(
-  //                 collection(db, `organizations/${parsedOrgData.id}/invoices`)
-  //             );
-  //             const querySnapshot = await getDocs(q);
-  //             const fetchedInvoices = querySnapshot.docs.map(doc => ({
-  //                 id: doc.id,
-  //                 ...doc.data(),
-  //             }));
-  //             setInvoices(fetchedInvoices);
-  //         } catch (error) {
-  //             console.error("Error fetching invoices: ", error);
-  //         }
-  //     };
-
-  //     fetchInvoices();
-  // }, []);
 
   if (loading) return <div className="text-center mt-8">Loading...</div>;
   if (!billData) return <div className="text-center mt-8">No data available.</div>;
@@ -240,7 +215,7 @@ const Bill = () => {
                         <View style={styles.tableRow1}>
                           <Text style={[styles.tableColHeader1, { width: '5%' }]}>{idx + 1}</Text>
                           <Text style={[styles.tableColHeader1, { width: '25%' }]}>{item.itemDetails}</Text>
-                          <Text style={[styles.tableColHeader1, { width: '35%' }]}>{item.itemDetails}</Text>
+                          <Text style={[styles.tableColHeader1, { width: '35%' }]}>{item.description}</Text>
                           <Text style={[styles.tableColHeader1, { width: '10%' }]}>{item.quantity}</Text>
                           <Text style={[styles.tableColHeader1, { width: '10%' }]}>{item.rate}</Text>
                           <Text style={[styles.tableColHeader1, { width: '15%' }]}>{item.amount}</Text>
@@ -322,10 +297,10 @@ const Bill = () => {
         <div>
           <div className='p-4 text-lg font-semibold'>INV-{billData.invoiceNumber}</div>
           <div className='flex w-full border bg-gray-200'>
-            <p className='inline border-r border-gray-400 p-2 px-4 cursor-pointer'> <span ><GrEdit className='inline' /></span> Edit</p>
+            <p className='inline border-r border-gray-400 p-2 px-4 cursor-pointer' onClick={() => { navigate(`/dashboard/invoice/edit/${id}`) }}> <span ><GrEdit className='inline' /></span> Edit</p>
             <p className='inline border-r border-gray-400  p-2 px-4'> <IoMdPrint className='inline' /><PDFDownloadLink document={<Invoice />} fileName="invoice.pdf">
-                  {({ loading }) => (loading ? 'Loading document...' : 'Print')}
-                </PDFDownloadLink></p>
+              {({ loading }) => (loading ? 'Loading document...' : 'Print')}
+            </PDFDownloadLink></p>
             <p className='inline border-r border-gray-400  p-2 px-4'> <FaRegShareSquare className='inline' /> Share</p>
           </div>
           <div style={{ marginLeft: 50 }}>
@@ -358,7 +333,7 @@ const Bill = () => {
                   <p className='tableColHeader' style={{ width: '35%' }}>Description</p>
                   <p className='tableColHeader' style={{ width: '10%' }}>Qty</p>
                   <p className='tableColHeader' style={{ width: '10%' }}>Rate (₹)</p>
-                  <p className='tableColHeader' style={{ width: '15%',borderRight:0 }}>Amount (₹)</p>
+                  <p className='tableColHeader' style={{ width: '15%', borderRight: 0 }}>Amount (₹)</p>
                 </div>
                 {
                   billData.items.map((item, idx) => {
@@ -370,7 +345,7 @@ const Bill = () => {
                           <p className='tableColHeader1' style={{ width: '35%' }}>{item.description}</p>
                           <p className='tableColHeader1' style={{ width: '10%' }}>{item.quantity}</p>
                           <p className='tableColHeader1' style={{ width: '10%' }}>{item.rate}</p>
-                          <p className='tableColHeader1' style={{ width: '15%',borderRight:0 }}>{item.amount}</p>
+                          <p className='tableColHeader1' style={{ width: '15%', borderRight: 0 }}>{item.amount}</p>
                         </div> : <></>
                       }
 

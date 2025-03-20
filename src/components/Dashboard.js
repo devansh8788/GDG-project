@@ -28,6 +28,7 @@ import Template4 from './invoice/Template4';
 import UpdateItem from './item/UpdateItem';
 import SalesByPerson from "./Reports/SalesByPerson";
 import SalesByItem from "./Reports/SalesByItem";
+import EditInv from './invoice/EditInvoiceComp/EditInv';
 
 
 const Dashboard = () => {
@@ -75,6 +76,7 @@ const Dashboard = () => {
 
             <Route path="invoice" element={<MainData/>}/>
             <Route path="invoiceform" element={<Invoice/>}/>
+            <Route path="invoice/Edit/:id" element={<EditInv/>}/>
             <Route path="reports" element={<Main/>}/>
             <Route path="product" element={<Item />} />
             <Route path="customer" element={<Customer/>} />
