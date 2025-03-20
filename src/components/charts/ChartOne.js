@@ -3,55 +3,38 @@ import ReactApexChart from 'react-apexcharts';
 
 const options = {
   legend: {
-    show: true, // Show legend
+    show: true,
     position: 'top',
     horizontalAlign: 'left',
     markers: {
-      width: 12,
-      height: 12,
+      width: 14,
+      height: 14,
+      radius: 12,
     },
   },
-  colors: ['#3C50E0', '#80CAEE'],
+  colors: ['#2563EB', '#14B8A6'],
   chart: {
-    fontFamily: 'Satoshi, sans-serif',
+    fontFamily: 'Inter, sans-serif',
     height: 350,
     type: 'area',
     dropShadow: {
       enabled: true,
-      color: '#623CEA14',
-      top: 10,
-      blur: 4,
+      color: '#2563EB33',
+      top: 8,
+      blur: 6,
       left: 0,
-      opacity: 0.1,
+      opacity: 0.2,
     },
     toolbar: {
       show: false,
     },
   },
-  responsive: [
-    {
-      breakpoint: 1024,
-      options: {
-        chart: {
-          height: 300,
-        },
-      },
-    },
-    {
-      breakpoint: 1366,
-      options: {
-        chart: {
-          height: 350,
-        },
-      },
-    },
-  ],
   stroke: {
-    width: [2, 2],
-    curve: 'smooth', // Change to smooth for better aesthetics
+    width: [3, 3],
+    curve: 'smooth',
   },
   grid: {
-    borderColor: '#e0e0e0',
+    borderColor: '#e5e7eb',
     xaxis: {
       lines: {
         show: true,
@@ -67,30 +50,17 @@ const options = {
     enabled: false,
   },
   markers: {
-    size: 6,
+    size: 5,
     colors: '#fff',
-    strokeColors: ['#3056D3', '#80CAEE'],
+    strokeColors: ['#2563EB', '#14B8A6'],
     strokeWidth: 3,
     hover: {
-      size: 8, // Increased hover size for better interaction
+      size: 7,
     },
   },
   xaxis: {
     type: 'category',
-    categories: [
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-    ],
+    categories: ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
     axisBorder: {
       show: false,
     },
@@ -100,10 +70,10 @@ const options = {
   },
   yaxis: {
     title: {
-      text: 'Sales',
+      text: 'Sales Performance',
       style: {
         fontSize: '14px',
-        color: '#6c757d', // Change to a more neutral color
+        color: '#6b7280',
       },
     },
     min: 0,
@@ -112,77 +82,37 @@ const options = {
   tooltip: {
     shared: true,
     intersect: false,
-    theme: 'dark', // Dark theme for tooltips
+    theme: 'light',
   },
 };
 
 const ChartOne = () => {
-  const [state, setState] = useState({
+  const [state] = useState({
     series: [
       {
-        name: 'Product One',
+        name: 'Product A',
         data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30, 45],
       },
       {
-        name: 'Product Two',
+        name: 'Product B',
         data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39, 51],
       },
     ],
   });
 
-  const handleReset = () => {
-    setState((prevState) => ({
-      ...prevState,
-    }));
-  };
-
   return (
-    <div className="col-span-12 rounded-sm border border-stroke bg-white px-6 pt-8 pb-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-8 xl:col-span-8">
-      <div className="flex flex-wrap items-start justify-between gap-4 sm:flex-nowrap">
-        <div className="flex w-full flex-wrap gap-4 sm:gap-5">
-          <div className="flex min-w-47.5">
-            <span className="mt-1 mr-2 flex h-4 w-full max-w-4 items-center justify-center rounded-full border border-primary">
-              <span className="block h-2.5 w-full max-w-2.5 rounded-full bg-primary"></span>
-            </span>
-            <div className="w-full">
-              <p className="font-semibold text-primary">Total Revenue</p>
-              <p className="text-sm font-medium">12.04.2022 - 12.05.2022</p>
-            </div>
-          </div>
-          <div className="flex min-w-47.5">
-            <span className="mt-1 mr-2 flex h-4 w-full max-w-4 items-center justify-center rounded-full border border-secondary">
-              <span className="block h-2.5 w-full max-w-2.5 rounded-full bg-secondary"></span>
-            </span>
-            <div className="w-full">
-              <p className="font-semibold text-secondary">Total Sales</p>
-              <p className="text-sm font-medium">12.04.2022 - 12.05.2022</p>
-            </div>
-          </div>
-        </div>
-        <div className="flex w-full max-w-45 justify-end">
-          <div className="inline-flex items-center rounded-md bg-white p-1.5 dark:bg-meta-4">
-            <button className="rounded bg-white py-1 px-3 text-xs font-medium text-black shadow-card hover:bg-white hover:shadow-card dark:bg-boxdark dark:text-white dark:hover:bg-boxdark">
-              Day
-            </button>
-            <button className="rounded py-1 px-3 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
-              Week
-            </button>
-            <button className="rounded py-1 px-3 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
-              Month
-            </button>
-          </div>
+    <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-lg">
+      <div className="flex flex-wrap items-center justify-between">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Sales Overview</h2>
+        <div className="flex gap-2">
+          <button className="rounded-md bg-blue-600 px-3 py-1.5 text-white text-xs font-medium shadow-md hover:bg-blue-700">Day</button>
+          <button className="rounded-md bg-gray-200 px-3 py-1.5 text-gray-800 text-xs font-medium hover:bg-gray-300">Week</button>
+          <button className="rounded-md bg-gray-200 px-3 py-1.5 text-gray-800 text-xs font-medium hover:bg-gray-300">Month</button>
         </div>
       </div>
 
-      <div>
-        <div id="chartOne" className="-ml-5">
-          <ReactApexChart
-            options={options}
-            series={state.series}
-            type="area"
-            height={350}
-          />
-        </div>
+      <div className="mt-5">
+        <ReactApexChart options={options} series={state.series} type="area" height={350} />
       </div>
     </div>
   );

@@ -181,16 +181,14 @@ function Dashboard({setLoading}) {
                             <h3 className="text-lg font-bold">Data Analytics Overview</h3>
                             <p className="text-gray-600 text-sm">Track invoices and sales trends.</p>
                         </div>
-                        <Link to="/dashboard/analytic">
+                        <Link to="/dashboard/analytics">
     <img src={start} alt="Start Icon" className="w-24 h-24 object-cover cursor-pointer" />
 </Link>
                     </div>
                     <MonthlyChart/>
                 </div>
 
-                {/* Recent Invoices */}
-{/* Recent Invoices */}
-{/* Recent Invoices */}
+      
 <div className="mt-4">
     <h2 className="text-lg font-bold mb-2">Recent Invoices</h2>
     <div className="bg-white p-4 rounded-lg shadow-xl">
