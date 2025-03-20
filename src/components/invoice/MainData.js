@@ -6,6 +6,7 @@ import '../item/item.css'; // Adjust the path as per your structure
 import { FaRegEdit } from "react-icons/fa";
 import Navbar from '../Navbar';
 import EditDropDown from './EditDropDown';
+import backgroundImage from "../../assets/r-back.svg";
 const InvoicePage = () => {
     const navigate = useNavigate();
     const [invoices, setInvoices] = useState([]);
@@ -76,16 +77,28 @@ const InvoicePage = () => {
     return (
         <div className="Main-Container ml-52  mx-auto px-4">
             <Navbar />
+                <div
+                      className="relative bg-cover bg-center py-10 flex flex-col justify-center items-center"
+                      style={{
+                        backgroundImage: `url(${backgroundImage})`,
+                      }}
+                    >
+                      {/* Header */}
+                      <h1 className="text-2xl mb-4">Invoices</h1>
+                      {/* Search Bar */}
+                      <div className="flex justify-end items-center  w-full">
+    <button
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        onClick={() => navigate('/dashboard/invoiceform')}
+    >
+        New Invoice
+    </button>
+</div>
+
+                    
+                    </div>
             {/* Header */}
-            <div className="flex justify-between items-center py-4">
-                <h1 className="text-lg font-bold text-left">Invoices</h1>
-                <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    onClick={() => navigate('/dashboard/invoiceform')}
-                >
-                    New Invoice
-                </button>
-            </div>
+           
 
             {/* Table Header */}
             <div className="flex text-dark items-center bg-gray-200 font-semibold text-xs uppercase px-4 py-2 border-b border-gray-300">

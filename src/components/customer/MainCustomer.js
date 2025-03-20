@@ -45,11 +45,7 @@ const CustomerMain = () => {
         <div className='Main-Container ml-52'>
             <Navbar/>
             <div className='flex justify-between p-4'>
-                <div className='flex items-center gap-2 relative cursor-pointer' onClick={() => setDropdownVisibility(!dropdownVisibility)}>
-                    <h4>{items}</h4>
-                    <FaChevronDown className='text-[#1d4ed8]' />
-                    {dropdownVisibility && <CustomerDropDown setDropdownVisibility={setDropdownVisibility} setItems={setItems} />}
-                </div>
+            <h1 className="text-lg font-bold text-left">Clients</h1>
                 <div className='flex gap-2'>
                     <button
                         className="bg-[#408dfb] flex items-center p-2 px-3 gap-1 text-sm rounded text-white"
