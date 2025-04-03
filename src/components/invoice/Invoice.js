@@ -12,6 +12,43 @@ const Invoice = () => {
   const [invoiceFormData, setInvoiceFormData] = useState({});
   const [invoiceTableData, setInvoiceTableData] = useState([]);
   const [invoiceForm1Data, setInvoiceForm1Data] = useState({});
+
+  const handleDraft=async()=>{
+    try {
+      const orgData = await AsyncStorage.getItem('selectedOrganization');
+      const parsedOrgData = orgData ? JSON.parse(orgData) : null;
+  
+      if (!parsedOrgData || !parsedOrgData.id) {
+        alert("No valid organization selected!");
+        return;
+      }
+  
+      const invoiceData = {
+        ...invoiceFormData, // Includes full customer data
+        items: invoiceTableData, // Table data (items)
+        notes: invoiceForm1Data.notes, // Notes
+        total: invoiceForm1Data.total, // Total amount
+        discount:invoiceForm1Data.discount,
+        taxRate:invoiceForm1Data.taxRate,
+        TaxPrice:invoiceForm1Data.TaxPrice,
+        DiscPrice:invoiceForm1Data.DiscPrice,
+        subTotal:invoiceForm1Data.subTotal,
+        createdAt: new Date(),
+      };
+      console.log('====================================');
+      console.log(invoiceFormData.invoiceNumber);
+      console.log('====================================');
+      await addDoc(
+        collection(db, `organizations/${parsedOrgData.id}/invoices`),
+        invoiceData
+      );
+
+      navigate('/dashboard/invoice', { state: { invoiceNumber: invoiceFormData.invoiceNumber } });
+
+    } catch (error) {
+      console.error("Error saving invoice: ", error);
+    }
+  }
   
   const handleSave = async () => {
     try {
@@ -56,7 +93,7 @@ const Invoice = () => {
       <InvoiceForm onDataChange={(data) => setInvoiceFormData(data)} />
       <InvoiceTable onTableDataChange={(data) => setInvoiceTableData(data)} onForm1DataChange={(data) => setInvoiceForm1Data(data)} />
       <div className="flex space-x-4 mt-6 items-center h-14">
-        <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md border border-gray-300 ml-6">
+        <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md border border-gray-300 ml-6" onClick={handleDraft}>
           Save as Draft
         </button>
         <button onClick={handleSave} className="bg-[#404dfb] text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center">

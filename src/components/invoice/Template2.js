@@ -295,13 +295,13 @@ const Template2 = () => {
                 </div>
                         <div>
                           <div className='p-4 text-lg font-semibold'>INV-{billData.invoiceNumber}</div>
-                          <div className='flex w-full border bg-gray-200'>
-                            <p className='inline border-r border-gray-400 p-2 px-4 cursor-pointer'> <span ><GrEdit className='inline' /></span> Edit</p>
-                            <p className='inline border-r border-gray-400  p-2 px-4'> <IoMdPrint className='inline' />                 <PDFDownloadLink document={<Invoice />} fileName="invoice.pdf">
-                                  {({ loading }) => (loading ? 'Loading document...' : 'Print')}
-                                </PDFDownloadLink></p>
-                            <p className='inline border-r border-gray-400  p-2 px-4'> <FaRegShareSquare className='inline' /> Share</p>
-                          </div>
+          <div className='flex w-full border bg-gray-200'>
+            <p className='inline border-r border-gray-400 p-2 px-4 cursor-pointer' onClick={() => { navigate(`/dashboard/invoice/edit/${id}`) }}> <span ><GrEdit className='inline' /></span> Edit</p>
+            <p className='inline border-r border-gray-400  p-2 px-4 cursor-pointer'> <IoMdPrint className='inline' /><PDFDownloadLink document={<Invoice />} fileName="invoice.pdf">
+              {({ loading }) => (loading ? 'Loading document...' : 'Print')}
+            </PDFDownloadLink></p>
+            <p className='inline border-r border-gray-400  p-2 px-4 cursor-pointer'  onClick={()=>{navigate('/dashboard/email',{ state: { invoiceNumber: billData.invoiceNumber} })}}> <FaRegShareSquare className='inline' /> Share</p>
+          </div>
                 <div style={{ marginLeft: 50 }}>
                     <div className='page112'>
                         <div className='inner_page112'>
@@ -388,11 +388,6 @@ const Template2 = () => {
                                     </div>
                                 </div>
                             </div>
-                            <button className='button-83112'>
-                                <PDFDownloadLink document={<Invoice />} fileName="invoice.pdf">
-                                    {({ loading }) => (loading ? 'Loading document...' : 'Download now!')}
-                                </PDFDownloadLink>
-                            </button>
                         </div>
                     </div>
                     <div className='mb-4'>

@@ -13,6 +13,7 @@ import { CiCircleQuestion } from "react-icons/ci";
 import { useLocation } from 'react-router-dom';
 import Loading from '../Loading';
 import emailjs from "@emailjs/browser";
+import axios from 'axios'
 import { getStorage, ref, uploadBytes ,getDownloadURL  } from "firebase/storage";
 import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
 const InvoiceSend = () => {
@@ -314,53 +315,79 @@ const InvoiceSend = () => {
     const service_id="service_7646imi";
     const template_id="template_4vmv8fr";
     const public_key="jVVxF5iMeMLW0h9sv";
-    const handleSubmit = async (e) => {
+
+    const HandleSubmit=async(e)=>{
       e.preventDefault();
       setLoading(true);
-      try {
+      try{
         await uploadPDF(); // Ensure upload completes
         const storage = getStorage();
         const pdfRef = ref(storage, `invoices/${user.uid}/${invoice[0].invoiceNumber}/invoice.pdf`);
         const downloadURL = await getDownloadURL(pdfRef);
     
-        const templateparams = {
-          from_name: user.email,
-          from_email: invoice[0].customer.email,
-          to_name: invoice[0].customer.displayName,
-          message: `You can download your invoice from here: ${downloadURL}`
-        };
-    
-        emailjs
-          .send(service_id, template_id, templateparams, public_key)
-          .then(
-            (response) => {
-              console.log("Response:", response);
-                    toast.success('Invoice sent Successfully!', {
-                      position: "top-right",
-                      autoClose: 3000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "colored",
-                    });
-                    setLoading(false);
-                    navigate('/dashboard/invoice')
-              // alert("Invoice sent successfully!");
-            },
-            (error) => {
-              console.error("Error:", error);
-              alert("Something went wrong. Please try again.");
-              setLoading(false);
-            }
-          );
-      } catch (error) {
-        console.error("Error in handleSubmit:", error);
-        alert("Something went wrong. Please try again.");
-        setLoading(false);
+          const res=await axios.post(`http://localhost:5000/email`,{
+              email:invoice[0].customer.email,
+              downloadURL:downloadURL
+          })
+          setLoading(false);
+          navigate('/dashboard/invoice')
+          console.log('====================================');
+          console.log(res.data.messageId);
+          console.log('====================================');
+      }catch(error){
+          console.log('====================================');
+          console.log(error);
+          console.log('====================================');
+          setLoading(false);
       }
-    };
+  }
+    // const handleSubmit = async (e) => {
+    //   e.preventDefault();
+    //   setLoading(true);
+    //   try {
+    //     await uploadPDF(); // Ensure upload completes
+    //     const storage = getStorage();
+    //     const pdfRef = ref(storage, `invoices/${user.uid}/${invoice[0].invoiceNumber}/invoice.pdf`);
+    //     const downloadURL = await getDownloadURL(pdfRef);
+    
+    //     const templateparams = {
+    //       from_name: user.email,
+    //       from_email: invoice[0].customer.email,
+    //       to_name: invoice[0].customer.displayName,
+    //       message: `You can download your invoice from here: ${downloadURL}`
+    //     };
+    
+    //     emailjs
+    //       .send(service_id, template_id, templateparams, public_key)
+    //       .then(
+    //         (response) => {
+    //           console.log("Response:", response);
+    //                 toast.success('Invoice sent Successfully!', {
+    //                   position: "top-right",
+    //                   autoClose: 3000,
+    //                   hideProgressBar: false,
+    //                   closeOnClick: true,
+    //                   pauseOnHover: true,
+    //                   draggable: true,
+    //                   progress: undefined,
+    //                   theme: "colored",
+    //                 });
+    //                 setLoading(false);
+    //                 navigate('/dashboard/invoice')
+    //           // alert("Invoice sent successfully!");
+    //         },
+    //         (error) => {
+    //           console.error("Error:", error);
+    //           alert("Something went wrong. Please try again.");
+    //           setLoading(false);
+    //         }
+    //       );
+    //   } catch (error) {
+    //     console.error("Error in handleSubmit:", error);
+    //     alert("Something went wrong. Please try again.");
+    //     setLoading(false);
+    //   }
+    // };
 
 
   return (
@@ -475,7 +502,7 @@ const InvoiceSend = () => {
           </div>
 
           <div className='m-4'>
-            <button className='bg-blue-400 p-2 px-4 rounded m-2 text-white font-bold' onClick={handleSubmit}>send</button>
+            <button className='bg-blue-400 p-2 px-4 rounded m-2 text-white font-bold' onClick={HandleSubmit}>send</button>
             <button className='bg-gray-300 p-2 px-4 rounded m-2 font-bold'>cancel</button>
           </div>
         </div>
