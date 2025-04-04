@@ -3,90 +3,84 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import { FaAngleDown } from "react-icons/fa";
-function EditInvoiceTable({ onTableDataChange ,onForm1DataChange ,billData}) {
+
+function EditInvoiceTable({ onTableDataChange, onForm1DataChange, billData }) {
   const [rows, setRows] = useState(() => {
-    return billData.items && billData.items.length > 0
+    return billData?.items && billData.items.length > 0
       ? billData.items.map((item, index) => ({
           id: index + 1,
-          itemDetails: item.name || '',
-          quantity: item.quantity || 2,
+          itemDetails: item.itemDetails || item.name || '',
+          quantity: item.quantity || 1,
           rate: item.rate || 0,
           amount: (item.rate || 0) * (item.quantity || 1),
         }))
       : [{ id: 1, itemDetails: '', quantity: 1, rate: 0, amount: 0 }];
   });
+
   const [products, setProducts] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(null); // Stores row ID for dropdown visibility
+  const [showDropdown, setShowDropdown] = useState(null);
   const dropdownRef = useRef(null);
-  const [TempTotal,setTempTotal]=useState(0);
+  const [TempTotal, setTempTotal] = useState(billData?.subTotal || 0);
 
-    const [notes, setNotes] = useState("Thanks for your business.");
-    const [total, setTotal] = useState(0);
-    const [isSubtotalOpen, setIsSubtotalOpen] = useState(false);
-    const [discount, setDiscount] = useState(0);
-    const [discountPrice, setDiscountPrice] = useState(billData.discountPrice);
-    const [taxType, setTaxType] = useState(billData.taxType);
-    const [taxRate, setTaxRate] = useState(billData.taxRate); 
-    const [taxRatePrice, setTaxRatePrice] = useState(billData.taxRatePrice); 
-    const [subTotal, setSubTotal] = useState(0); // Example default for debugging
-    const toggleSubtotal = () => setIsSubtotalOpen(!isSubtotalOpen);
+  const [notes, setNotes] = useState(billData?.notes || "Thanks for your business.");
+  const [total, setTotal] = useState(billData?.total || 0);
+  const [isSubtotalOpen, setIsSubtotalOpen] = useState(false);
+  const [discount, setDiscount] = useState(billData?.discount || 0);
+  const [discountPrice, setDiscountPrice] = useState(billData?.DiscPrice || 0);
+  const [taxType, setTaxType] = useState(billData?.taxType || '');
+  const [taxRate, setTaxRate] = useState(billData?.taxRate || 0);
+  const [taxRatePrice, setTaxRatePrice] = useState(billData?.TaxPrice || 0);
+  const [subTotal, setSubTotal] = useState(billData?.subTotal || 0);
 
-    useEffect(()=>{
-      onForm1DataChange({ notes,discount ,taxRate, total: subTotal,subTotal:TempTotal ,TaxPrice:taxRatePrice,DiscPrice:discountPrice })
-    },[notes, subTotal, discount, taxRate,taxRatePrice,TempTotal,discountPrice, onForm1DataChange])
+  const toggleSubtotal = () => setIsSubtotalOpen(!isSubtotalOpen);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const orgData = await AsyncStorage.getItem('selectedOrganization');
-          const parsedOrgData = orgData ? JSON.parse(orgData) : null;
-    
-          if (!parsedOrgData || !parsedOrgData.id) {
-            console.error("No valid organization selected!");
-            return;
-          }
-    
-          const querySnapshot = await getDocs(collection(db, `organizations/${parsedOrgData.id}/products`));
-          const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          setProducts(data);
-    
-          // Populate initial rows with the first product as an example
-          setRows((prevRows) =>
-            prevRows.map((row, index) => {
-              const firstProduct = data[0];
-              if (firstProduct) {
-                return {
-                  ...row,
-                  itemDetails: firstProduct.name,
-                  rate: firstProduct.price,
-                  amount: firstProduct.price * row.quantity,
-                };
-              }
-              return row;
-            })
-          );
-        } catch (error) {
-          console.error("Error fetching items: ", error);
+  useEffect(() => {
+    onForm1DataChange({
+      notes,
+      discount,
+      taxRate,
+      total: subTotal,
+      subTotal: TempTotal,
+      TaxPrice: taxRatePrice,
+      DiscPrice: discountPrice
+    });
+  }, [notes, subTotal, discount, taxRate, taxRatePrice, TempTotal, discountPrice, onForm1DataChange]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const orgData = await AsyncStorage.getItem('selectedOrganization');
+        const parsedOrgData = orgData ? JSON.parse(orgData) : null;
+
+        if (!parsedOrgData || !parsedOrgData.id) {
+          console.error("No valid organization selected!");
+          return;
         }
-      };
-    
-      fetchData();
-    }, []);
-    
 
-    useEffect(() => {
-      const subAmount = rows.reduce((acc, row) => acc + (row.amount || 0), 0);
-      setTempTotal(parseFloat(subAmount.toFixed(2)))
-      setSubTotal(parseFloat(subAmount.toFixed(2)));
-    }, [rows]);
-    
-    useEffect(()=>{
-      const DiscPrice=((TempTotal * discount) / 100).toFixed(2);
-      setDiscountPrice(parseFloat(DiscPrice));
-      const TaxPrice=(((subTotal - (subTotal * discount) / 100) * taxRate) / 100).toFixed(2);
-      setTaxRatePrice(parseFloat(TaxPrice));
-    },[discount,taxRate])
-  
+        const querySnapshot = await getDocs(collection(db, `organizations/${parsedOrgData.id}/products`));
+        const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching items: ", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const subAmount = rows.reduce((acc, row) => acc + (row.amount || 0), 0);
+    setTempTotal(parseFloat(subAmount.toFixed(2)));
+    setSubTotal(parseFloat(subAmount.toFixed(2)));
+  }, [rows]);
+
+  useEffect(() => {
+    const DiscPrice = ((TempTotal * discount) / 100).toFixed(2);
+    setDiscountPrice(parseFloat(DiscPrice));
+    const TaxPrice = (((subTotal - (subTotal * discount) / 100) * taxRate) / 100).toFixed(2);
+    setTaxRatePrice(parseFloat(TaxPrice));
+    setTotal(parseFloat((subTotal - parseFloat(DiscPrice) + parseFloat(TaxPrice)).toFixed(2)));
+  }, [discount, taxRate, TempTotal, subTotal]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -100,10 +94,9 @@ function EditInvoiceTable({ onTableDataChange ,onForm1DataChange ,billData}) {
 
   useEffect(() => {
     if (products.length > 0) {
-      setShowDropdown(null); // Reset dropdown state after products are fetched
+      setShowDropdown(null);
     }
   }, [products]);
-  
 
   const addRow = () => {
     setRows([...rows, { id: rows.length + 1, itemDetails: '', quantity: 1, rate: 0, amount: 0 }]);
@@ -135,20 +128,19 @@ function EditInvoiceTable({ onTableDataChange ,onForm1DataChange ,billData}) {
     setRows((prevRows) =>
       prevRows.map((row) =>
         row.id === rowId
-          ? { ...row, itemDetails: product.name, description:product.description , rate: product.price, amount: product.price * row.quantity }
+          ? { ...row, itemDetails: product.name, description: product.description, rate: product.price, amount: product.price * row.quantity }
           : row
       )
     );
-    setShowDropdown(null); // Close dropdown after selection
+    setShowDropdown(null);
   };
 
-  // Notify parent component of row data changes
   useEffect(() => {
     onTableDataChange(rows);
   }, [rows, onTableDataChange]);
 
   return (
-    <div className="p-4  rounded-lg w-full mx-auto">
+    <div className="p-4 rounded-lg w-full mx-auto">
       <div className="border-b pb-2">
         <h2 className="text-lg font-semibold ml-3">Item Table</h2>
       </div>
@@ -171,7 +163,7 @@ function EditInvoiceTable({ onTableDataChange ,onForm1DataChange ,billData}) {
                     type="text"
                     value={row.itemDetails}
                     onChange={(e) => handleInputChange(row.id, 'itemDetails', e.target.value)}
-                    onClick={() => setShowDropdown(row.id)}   
+                    onClick={() => setShowDropdown(row.id)}
                     placeholder="Type or click to select an item."
                     className="w-full p-2 border rounded focus:outline-none"
                   />
@@ -228,120 +220,64 @@ function EditInvoiceTable({ onTableDataChange ,onForm1DataChange ,billData}) {
         </button>
       </div>
 
-
-
       <div className="p-4 w-full mx-auto pl-3">
-      <div className="flex flex-col md:flex-row gap-10">
-        {/* Left Section - Customer Notes */}
-        <div className="md:w-1/2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Customer Notes
-          </label>
-          <textarea
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            rows="3"
-            placeholder="Thanks for your business."
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-          />
-          <p className="text-xs text-gray-500 mt-1">Will be displayed on the invoice</p>
-        </div>
-
-        {/* Right Section - Total and Subtotal */}
-        <div className="md:w-1/2">
-        {isSubtotalOpen && (
-            <div className="my-2 space-y-2 mb-4 transition duration-300">
-              <div className="flex justify-between">
-                <span className="font-semibold">Sub Total</span>
-                <span className="text-gray-900 font-semibold">{rows.reduce((acc, row) => acc + row.amount, 0).toFixed(2)}</span>
-              </div>
-              <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                <label className="font-semibold">Discount</label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="number"
-                    className="w-16 px-2 py-1 border border-gray-300 rounded"
-                    value={discount}
-                    onChange={(e) => {
-                      const discountPercentage = parseFloat(e.target.value) || 0; // Parse input as a percentage
-                      setDiscount(discountPercentage); // Update the discount percentage state
-                      setSubTotal((prevTotal) => prevTotal - (prevTotal * discountPercentage) / 100); // Calculate and update subtotal
-                    }}
-                    
-                  />
-                  <span>%</span>
-                </div>
-                <span className="text-gray-900 font-semibold">
-                  -{((TempTotal * discount) / 100).toFixed(2)}
-                </span>
-              </div>
-              <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div className="flex gap-2">
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="taxType"
-                      checked={taxType === "TDS"}
-                      onChange={() => setTaxType("TDS")}
-                    />{" "}
-                    TDS
-                  </label>
-                  <label className="flex items-center gap-1">
-                    <input
-                      type="radio"
-                      name="taxType"
-                      checked={taxType === "TCS"}
-                      onChange={() => setTaxType("TCS")}
-                    />{" "}
-                    TCS
-                  </label>
-                </div>
-                <select
-                  className="px-2 py-1 border border-gray-300 rounded w-full md:w-auto"
-                  value={taxRate}
-                  onChange={(e) => {
-                    const selectedTaxRate = parseFloat(e.target.value) || 0;
-                    setTaxRate(selectedTaxRate);
-                    setSubTotal((prevTotal) => {
-                      const discountedTotal = prevTotal - (prevTotal * discount) / 100;
-                      return discountedTotal + (discountedTotal * selectedTaxRate) / 100; // Add tax to the discounted total
-                    });
-                  }}
-                >
-                  <option value="0">Select a Tax</option>
-                  <option value="5">5%</option>
-                  <option value="10">10%</option>
-                  <option value="15">15%</option>
-                </select>
-                <span className="text-gray-900 font-semibold">
-                  +{(((subTotal - (subTotal * discount) / 100) * taxRate) / 100).toFixed(2)}
-                </span>
-              </div>
-            </div>
-          )}
-          <div
-            className="flex items-center justify-between ml-auto mb-4 border-b pb-2 mb-2" >
-            <span className="font-semibold text-gray-500 text-lg">Total ( ₹ )</span>
-            <span className="text-gray-900 font-semibold">{subTotal.toFixed(2)}</span>
+        <div className="flex flex-col md:flex-row gap-10">
+          <div className="md:w-1/2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Customer Notes
+            </label>
+            <textarea
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              rows="3"
+              placeholder="Thanks for your business."
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+            />
+            <p className="text-xs text-gray-500 mt-1">Will be displayed on the invoice</p>
           </div>
-          <span className='text-sm text-blue-500 cursor-pointer' onClick={toggleSubtotal}>show Total summary <FaAngleDown className='inline' /></span>
+
+          <div className="md:w-1/2">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium text-gray-700">Sub Total</span>
+              <span className="text-sm font-semibold">${subTotal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between items-center mb-2">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-gray-700">Discount</span>
+                <input
+                  type="number"
+                  value={discount}
+                  onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
+                  className="w-16 px-2 py-1 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  min="0"
+                  max="100"
+                />
+                <span className="text-sm text-gray-500">%</span>
+              </div>
+              <span className="text-sm font-semibold">${discountPrice.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between items-center mb-2">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-gray-700">Tax</span>
+                <input
+                  type="number"
+                  value={taxRate}
+                  onChange={(e) => setTaxRate(parseFloat(e.target.value) || 0)}
+                  className="w-16 px-2 py-1 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  min="0"
+                  max="100"
+                />
+                <span className="text-sm text-gray-500">%</span>
+              </div>
+              <span className="text-sm font-semibold">${taxRatePrice.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between items-center border-t pt-2">
+              <span className="text-lg font-bold text-gray-900">Total</span>
+              <span className="text-lg font-bold text-gray-900">${total.toFixed(2)}</span>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* Add Terms and Conditions Button */}
-      <button className="mt-4 flex items-center text-blue-600 text-sm font-medium focus:outline-none">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-4 w-4 mr-1"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-        </svg>
-        Add Terms and conditions
-      </button>
-    </div>
     </div>
   );
 }

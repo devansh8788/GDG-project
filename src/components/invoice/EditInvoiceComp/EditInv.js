@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { db } from '../../../firebase';
-import { doc, getDoc, collection, getDocs, query, addDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs, query, updateDoc } from 'firebase/firestore';
 import EditInvoiceForm from './EditInvoiceForm';
 import EditInvoiceTable from './EditInvoiceTable';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -13,7 +13,8 @@ const EditInv = () => {
   const [invoiceForm1Data, setInvoiceForm1Data] = useState({});
   const [billData, setBillData] = useState(null);
   const [loading, setLoading] = useState(true);
-    const { id } = useParams();
+  const { id } = useParams();
+
   useEffect(() => {
     const fetchBillData = async () => {
       try {
@@ -32,11 +33,26 @@ const EditInv = () => {
         if (docSnap.exists()) {
           const billData = docSnap.data();
           setBillData(billData);
+          // Initialize form data with existing bill data
+          setInvoiceFormData({
+            customer: billData.customer,
+            invoiceNumber: billData.invoiceNumber,
+            invoiceDate: billData.invoiceDate,
+            terms: billData.terms,
+            dueDate: billData.dueDate,
+          });
+          setInvoiceTableData(billData.items || []);
+          setInvoiceForm1Data({
+            notes: billData.notes || "Thanks for your business.",
+            total: billData.total || 0,
+            discount: billData.discount || 0,
+            taxRate: billData.taxRate || 0,
+            TaxPrice: billData.TaxPrice || 0,
+            DiscPrice: billData.DiscPrice || 0,
+            subTotal: billData.subTotal || 0,
+          });
         } else {
           alert('No such invoice found!');
-          console.log('====================================');
-          console.log("kuchh nhi");
-          console.log('====================================');
         }
       } catch (error) {
         console.error('Error fetching bill data:', error);
@@ -59,21 +75,20 @@ const EditInv = () => {
       }
   
       const invoiceData = {
-        ...invoiceFormData, // Includes full customer data
-        items: invoiceTableData, // Table data (items)
-        notes: invoiceForm1Data.notes, // Notes
-        total: invoiceForm1Data.total, // Total amount
-        discount:invoiceForm1Data.discount,
-        taxRate:invoiceForm1Data.taxRate,
-        TaxPrice:invoiceForm1Data.TaxPrice,
-        DiscPrice:invoiceForm1Data.DiscPrice,
-        subTotal:invoiceForm1Data.subTotal,
-        createdAt: new Date(),
+        ...invoiceFormData,
+        items: invoiceTableData,
+        notes: invoiceForm1Data.notes,
+        total: invoiceForm1Data.total,
+        discount: invoiceForm1Data.discount,
+        taxRate: invoiceForm1Data.taxRate,
+        TaxPrice: invoiceForm1Data.TaxPrice,
+        DiscPrice: invoiceForm1Data.DiscPrice,
+        subTotal: invoiceForm1Data.subTotal,
+        updatedAt: new Date(),
       };
-      await addDoc(
-        collection(db, `organizations/${parsedOrgData.id}/invoices`),
-        invoiceData
-      );
+
+      const docRef = doc(db, `organizations/${parsedOrgData.id}/invoices`, id);
+      await updateDoc(docRef, invoiceData);
 
       navigate('/dashboard/email', { state: { invoiceNumber: invoiceFormData.invoiceNumber } });
 
@@ -81,14 +96,13 @@ const EditInv = () => {
       console.error("Error saving invoice: ", error);
     }
   };
+
   if (loading) return <div className="text-center mt-8">Loading...</div>;
   
   return (
     <div className="ml-52">
-
       <EditInvoiceForm onDataChange={(data) => setInvoiceFormData(data)} billData={billData} />
       <EditInvoiceTable onTableDataChange={(data) => setInvoiceTableData(data)} onForm1DataChange={(data) => setInvoiceForm1Data(data)} billData={billData} />
-      {/* <InvoiceForm1 onForm1DataChange={(data) => setInvoiceForm1Data(data)} /> */}
       <div className="flex space-x-4 mt-6 items-center h-14">
         <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md border border-gray-300 ml-6">
           Save as Draft

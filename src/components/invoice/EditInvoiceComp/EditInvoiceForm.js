@@ -3,43 +3,45 @@ import Select from 'react-select';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getFirestore, collection, getDocs, query } from 'firebase/firestore';
 import { db } from '../../../firebase';
-function EditInvoiceForm({ onDataChange ,billData}) {
+
+function EditInvoiceForm({ onDataChange, billData }) {
   const [customerOptions, setCustomerOptions] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [invoiceDate, setInvoiceDate] = useState(billData.invoiceDate);
-  const [invoiceNumber, setInvoiceNumber] = useState('INV-000001');
-  const [terms, setTerms] = useState(billData.terms);
-  const [dueDate, setDueDate] = useState('');
-    const [invoices, setInvoices] = useState([]);
+  const [invoiceDate, setInvoiceDate] = useState(billData?.invoiceDate || new Date().toISOString().split('T')[0]);
+  const [invoiceNumber, setInvoiceNumber] = useState(billData?.invoiceNumber || 'INV-000001');
+  const [terms, setTerms] = useState(billData?.terms || 'Net 15');
+  const [dueDate, setDueDate] = useState(billData?.dueDate || '');
+  const [invoices, setInvoices] = useState([]);
 
-    // Fetch invoices from Firestore
-    useEffect(() => {
-        const fetchInvoices = async () => {
-            try {
-                const orgData = localStorage.getItem('selectedOrganization');
-                const parsedOrgData = orgData ? JSON.parse(orgData) : null;
+  // Fetch invoices from Firestore
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      try {
+        const orgData = await AsyncStorage.getItem('selectedOrganization');
+        const parsedOrgData = orgData ? JSON.parse(orgData) : null;
 
-                if (!parsedOrgData || !parsedOrgData.id) {
-                    alert("No valid organization selected!");
-                    return;
-                }
+        if (!parsedOrgData || !parsedOrgData.id) {
+          alert("No valid organization selected!");
+          return;
+        }
 
-                const q = query(
-                    collection(db, `organizations/${parsedOrgData.id}/invoices`)
-                );
-                const querySnapshot = await getDocs(q);
-                const fetchedInvoices = querySnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
-                setInvoices(fetchedInvoices);
-            } catch (error) {
-                console.error("Error fetching invoices: ", error);
-            }
-        };
+        const q = query(
+          collection(db, `organizations/${parsedOrgData.id}/invoices`)
+        );
+        const querySnapshot = await getDocs(q);
+        const fetchedInvoices = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setInvoices(fetchedInvoices);
+      } catch (error) {
+        console.error("Error fetching invoices: ", error);
+      }
+    };
 
-        fetchInvoices();
-    }, []);
+    fetchInvoices();
+  }, []);
+
   const fetchData = async () => {
     try {
       const orgData = await AsyncStorage.getItem('selectedOrganization');
@@ -53,7 +55,7 @@ function EditInvoiceForm({ onDataChange ,billData}) {
       const db = getFirestore();
       const querySnapshot = await getDocs(collection(db, `organizations/${parsedOrgData.id}/customers`));
 
-    // Map customer data into options with full data stored
+      // Map customer data into options with full data stored
       const data = querySnapshot.docs.map((doc) => {
         const customer = doc.data();
         return {
@@ -61,7 +63,7 @@ function EditInvoiceForm({ onDataChange ,billData}) {
           label: customer.displayName || 'Unnamed Customer',
           fullData: {
             id: doc.id,
-            salutation:customer.salutation ,
+            salutation: customer.salutation,
             firstName: customer.firstName,
             lastName: customer.lastName,
             companyName: customer.companyName,
@@ -93,6 +95,14 @@ function EditInvoiceForm({ onDataChange ,billData}) {
       });
 
       setCustomerOptions(data);
+
+      // Set selected customer if billData exists
+      if (billData?.customer) {
+        const selected = data.find(option => option.value === billData.customer.id);
+        if (selected) {
+          setSelectedCustomer(selected);
+        }
+      }
     } catch (error) {
       console.error('Error fetching customers: ', error);
     }
@@ -126,7 +136,7 @@ function EditInvoiceForm({ onDataChange ,billData}) {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [billData]);
 
   useEffect(() => {
     // Calculate due date whenever invoice date or terms change
@@ -137,7 +147,7 @@ function EditInvoiceForm({ onDataChange ,billData}) {
     // Pass the full customer data to parent when customer or other fields change
     onDataChange({
       customer: selectedCustomer?.fullData || null,
-      invoiceNumber:`00000${invoices.length+1}`,
+      invoiceNumber: invoiceNumber,
       invoiceDate,
       terms,
       dueDate,
@@ -145,17 +155,16 @@ function EditInvoiceForm({ onDataChange ,billData}) {
   }, [selectedCustomer, invoiceNumber, invoiceDate, terms, dueDate, onDataChange]);
 
   return (
-    <div className="p-6 bg-white rounded-lg  w-full mx-auto">
+    <div className="p-6 bg-white rounded-lg w-full mx-auto">
       <div className="mb-4">
         <label className="block text-red-500 font-semibold text-sm mb-1">Customer Name*</label>
         <Select
           options={customerOptions}
-          value={customerOptions.find((option) => option.value === selectedCustomer?.id)}
+          value={customerOptions.find((option) => option.value === selectedCustomer?.value)}
           onChange={(selectedOption) => setSelectedCustomer(selectedOption)}
           placeholder="Select or add a customer"
           className="w-full text-sm"
         />
-
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-4">
@@ -163,7 +172,7 @@ function EditInvoiceForm({ onDataChange ,billData}) {
           <label className="block text-red-500 font-semibold text-sm mb-1">Invoice#*</label>
           <input
             type="text"
-            value={`INV-00000${invoices.length+1}`}
+            value={invoiceNumber}
             onChange={(e) => setInvoiceNumber(e.target.value)}
             className="w-full p-2 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />

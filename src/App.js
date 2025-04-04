@@ -9,6 +9,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
 
 import OrganizationForm from './components/OrganizationForm';
+import Chatbot from './components/Chatbot';
 
 // Global Styles using Inter font
 const GlobalStyles = createGlobalStyle`
@@ -56,11 +57,14 @@ function AppRoutes() {
 
 function App() {
   return (
-    <Router>
-      <ToastContainer /> 
-      <GlobalStyles />
-      <AppRoutes />
-    </Router>
+    <div className="App">
+      <Router>
+        <ToastContainer /> 
+        <GlobalStyles />
+        <AppRoutes />
+        <Chatbot />
+      </Router>
+    </div>
   );
 }
 

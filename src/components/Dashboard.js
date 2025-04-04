@@ -29,6 +29,7 @@ import UpdateItem from './item/UpdateItem';
 import SalesByPerson from "./Reports/SalesByPerson";
 import SalesByItem from "./Reports/SalesByItem";
 import EditInv from './invoice/EditInvoiceComp/EditInv';
+import EditCustomer from './customer/EditCustomer';
 
 
 const Dashboard = () => {
@@ -81,6 +82,9 @@ const Dashboard = () => {
             <Route path="product" element={<Item />} />
             <Route path="customer" element={<Customer/>} />
             <Route path="customerform" element={<Customerform/>}/>
+            <Route path="customer/edit/:id" element={<EditCustomer />} />
+
+
             <Route path="/expenses" element={<MainPage/>}/>
             <Route path="/expensesform" element={<ExpanseForm/>}/>
             <Route path="/updateform" element={<UpdateForm/>}/>
