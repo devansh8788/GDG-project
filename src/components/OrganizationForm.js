@@ -111,7 +111,7 @@ const OrganizationForm = ({ user, onOrganizationAdded }) => {
         <div className="p-6 rounded-t-lg" style={{ backgroundColor: '#f0f4fc' }}>
           <h2 className="text-xl font-bold mb-2">Welcome aboard, {user ? user.displayName : 'User'}! 🤝</h2>
           <p className="text-sm text-gray-600">
-            Enter your organization details to get started with Zoho Invoice.
+            Enter your organization details to get started with Invoiced.
           </p>
         </div>
 

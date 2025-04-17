@@ -43,11 +43,11 @@ const Chatbot = () => {
             'hello': 'Hello! How can I help you today?',
             'hi': 'Hi there! How can I assist you?',
             'help': 'I can help you with:\n- Creating and managing invoices\n- Adding and editing customers\n- Generating reports\n- Understanding the dashboard\nWhat would you like to know more about?',
-            'invoice': 'To create an invoice:\n1. Go to the Invoices section\n2. Click "Create New Invoice"\n3. Fill in the customer details\n4. Add items and quantities\n5. Save the invoice',
+            'invoice': 'To create an invoice:\n1.For Create a invoice First you will have to add client and product \n2.After adding client and product Go to the Invoices section\n3. Click "Create New Invoice"\n4. Fill in the customer details\n5. Add items and quantities\n5. Save the invoice',
             'customer': 'To add a customer:\n1. Go to the Customers section\n2. Click "Add New Customer"\n3. Fill in the customer details\n4. Save the information',
             'report': 'To view reports:\n1. Go to the Reports section\n2. Select the type of report\n3. Choose the date range\n4. View or download the report',
             'dashboard': 'The dashboard shows:\n- Recent invoices\n- Customer overview\n- Financial summaries\n- Quick actions for common tasks',
-            'default': 'I\'m not sure I understand. Could you please rephrase your question? You can ask about:\n- Invoices\n- Customers\n- Reports\n- Dashboard features'
+            'default': 'I\'m not understanding your words.I am only able to assist with the problem mentioned below.? You can ask about:\n- Invoices\n- Customers\n- Reports\n- Dashboard features'
         };
 
         // Check for keywords in the message

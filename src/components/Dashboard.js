@@ -30,11 +30,18 @@ import SalesByPerson from "./Reports/SalesByPerson";
 import SalesByItem from "./Reports/SalesByItem";
 import EditInv from './invoice/EditInvoiceComp/EditInv';
 import EditCustomer from './customer/EditCustomer';
-
-
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { auth } from '../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Dashboard = () => {
+    const [user] = useAuthState(auth);
+    const db = getFirestore();
   const [loading, setLoading] = useState(false);
   const location = useLocation(); // Detect route changes
+    const [organizations, setOrganizations] = useState([]);
+    const [selectedOrg, setSelectedOrg] = useState(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Trigger loading animation on route change
   useEffect(() => {
@@ -47,10 +54,40 @@ const Dashboard = () => {
     return () => clearTimeout(timer);
   }, [location]);
 
+    // Fetch organizations from Firestore
+    useEffect(() => {
+      const fetchOrganizations = async () => {
+        if (user) {
+          const querySnapshot = await getDocs(
+            collection(db, 'users', user.uid, 'organizations')
+          );
+          const orgData = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setOrganizations(orgData);
+          if (orgData.length > 0) {
+            setSelectedOrg(orgData[0]);
+            try {
+              await AsyncStorage.setItem('selectedOrganization', JSON.stringify(orgData[0]));
+            } catch (error) {
+              console.error('Failed to save organization to AsyncStorage:', error);
+            }
+          }
+        }
+        setLoading(false); // End loading state after fetching
+      };
+    
+      fetchOrganizations();
+    }, [user, db]);
+    
+
   return (
     <div className="flex">
       {/* Sidebar Component */}
-      <Sidebar />
+      {
+        organizations.length!==0 && <Sidebar />
+      }
 
       {/* Main Content Area */}
       <div className="flex-1 bg-white">
