@@ -325,7 +325,7 @@ const InvoiceSend = () => {
         const pdfRef = ref(storage, `invoices/${user.uid}/${invoice[0].invoiceNumber}/invoice.pdf`);
         const downloadURL = await getDownloadURL(pdfRef);
     
-          const res=await axios.post(`http://localhost:5000/email`,{
+          const res=await axios.post(`https://invoice-backend-ykyx.onrender.com/email`,{
               email:invoice[0].customer.email,
               downloadURL:downloadURL
           })

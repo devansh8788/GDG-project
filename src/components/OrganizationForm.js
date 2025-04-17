@@ -6,7 +6,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import backGround from '../assets/back.jpg';
-
+import axios from 'axios'
 const OrganizationForm = ({ user, onOrganizationAdded }) => {
   const navigate = useNavigate(); // Initialize useNavigate
 
@@ -21,27 +21,45 @@ const OrganizationForm = ({ user, onOrganizationAdded }) => {
   const [timezone] = useState('(GMT 5:30) India Standard Time (Asia/Calcutta)');
   const [gstRegistered, setGstRegistered] = useState(false);
 
-  // Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!user) {
       toast.error('Please log in to add organization data.');
       return;
     }
-
+  
     try {
       let logoURL = '';
-
+  
       if (logoFile) {
-        const logoRef = ref(storage, `users/${user.uid}/logos/${logoFile.name}`);
-        await uploadBytes(logoRef, logoFile);
-        logoURL = await getDownloadURL(logoRef);
+        const formData = new FormData();
+        formData.append('logo', logoFile);
+  
+        const response = await axios.post('https://invoice-backend-ykyx.onrender.com/upload-logo', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+  
+        logoURL = response.data.logoURL;
       } else {
         toast.error('Please upload a logo file.');
         return;
       }
-
+  
+      // Instead of Firestore, you can save this to your own DB or call another endpoint
+      const orgData = {
+        logo: logoURL,
+        organizationName,
+        industry,
+        organizationLocation,
+        state,
+        currency,
+        language,
+        timezone,
+        gstRegistered,
+      };
+  
+      // Call your backend or Firestore endpoint here
       await addDoc(collection(db, 'users', user.uid, 'organizations'), {
         logo: logoURL,
         organizationName,
@@ -52,20 +70,21 @@ const OrganizationForm = ({ user, onOrganizationAdded }) => {
         language,
         timezone,
         gstRegistered,
-      });
-
+      })
+      console.log('Organization Data:', orgData);
       toast.success('Organization added successfully!');
       onOrganizationAdded();
-
-      // Clear the form
+  
+      // Clear form
       setOrganizationName('');
       setState('');
       setLogoFile(null);
     } catch (error) {
-      console.error('Error adding document:', error);
+      console.error('Error adding organization:', error);
       toast.error('Failed to add organization data.');
     }
   };
+  
 
   return (
     <div

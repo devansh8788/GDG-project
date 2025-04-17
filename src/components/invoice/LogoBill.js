@@ -108,7 +108,8 @@ const Logobill = () => {
       borderBottomWidth: 1
     },
     logo: {
-      width: 150
+      width: 75,
+      height:75
     },
     title: {
       fontSize: 40,
@@ -207,7 +208,7 @@ const Logobill = () => {
       <Page size="A4" style={styles.page}>
         {/* Invoice Title */}
         <View style={styles.titleView}>
-          <Image src={logo} style={styles.logo} />
+          <Image src={selectedOrg.logo} style={styles.logo} />
           <Text style={styles.title}>Invoice</Text>
         </View>
         {/* Bill To */}
