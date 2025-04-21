@@ -150,7 +150,7 @@ const ItemForm = ({ setFormView, addItem }) => {
         Save
       </button>
       <button
-        className=' bg-[#408dfb] text-black bg-gray-300 text-sm p-2 rounded bottom-4 '
+        className=' text-black bg-gray-300 text-sm p-2 rounded bottom-4 '
         onClick={() => setFormView(false)}
       >
         Cancel
